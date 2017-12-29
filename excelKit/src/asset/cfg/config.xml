@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<dir>
+		<sheet></sheet>
+		<bin></bin>
+		<xml></xml>
+		<json></json>
+		<code></code>
+	</dir>
+	<format></format>
+	<export></export>
+</root>
