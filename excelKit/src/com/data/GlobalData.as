@@ -11,17 +11,13 @@ package com.data
 	public class GlobalData
 	{
 		/**
-		 *表格目录文件 
-		 */		
-		public var sheetDir:File;
-		/**
 		 *传入参数 
 		 */		
 		public var arguments:Array;
 		/**
 		 *导出文件目录字典 
 		 */		
-		public var outDict:Dictionary =new Dictionary(true);
+		public var filesDict:Dictionary =new Dictionary(true);
 		/**
 		 *格式通道个数
 		 */		
@@ -38,9 +34,15 @@ package com.data
 		 * 多个端导出值
 		 */		
 		public var export:int=0;
+		
+		/**
+		 *生成代码的路径 
+		 */		
+		public var class_path:String;
 		private static var _instance:GlobalData;
 		public function GlobalData()
 		{
+			
 		}
 		
 		/**

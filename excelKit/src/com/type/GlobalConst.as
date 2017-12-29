@@ -1,7 +1,12 @@
 package com.type
 {
-	public class OutPutType
+	public class GlobalConst
 	{
+		public static const sheet:String ="sheet";
+		/**
+		 *输出目录 
+		 */		
+		public static const output:String ="output";	
 		/**
 		 * 输出bin
 		 */

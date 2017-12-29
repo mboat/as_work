@@ -1,6 +1,10 @@
-import com.type.OutPutType;
+import com.data.core.HashMap;
+import com.type.GlobalConst;
 
 import flash.events.Event;
+import flash.filesystem.File;
+
+import mx.controls.Alert;
 
 import spark.components.CheckBox;
 import spark.components.TextArea;
@@ -11,6 +15,7 @@ import spark.components.TextArea;
  */
 private function saveCfg():void{
 	var path:String =_root+_cfgpath;
+	XML.ignoreProcessingInstructions = false;
 	FileUtil.saveFile(path,_cfgXml.toXMLString());
 }
 /**
@@ -25,8 +30,8 @@ private function checkCfg():void{
 	
 	showInfo();
 	
-	path=_cfgXml.dir.sheet;
-	checkPath(path,browseSheetDirComplete);
+//	path=_cfgXml.dir.sheet;
+//	checkPath(path,browseSheetDirComplete);
 }
 
 /**
@@ -34,11 +39,25 @@ private function checkCfg():void{
  */
 private function showInfo():void{
 	var list:XMLList =_cfgXml.elements("dir").children();
+	
 	for(var key:String in list){
 		var xml:XML=list[key];
-		var txt:TextArea=this["txt_"+xml.name()+"_dir"];
+		var type:String =xml.name();
+		var path:String=xml.text();
+		if(path&&path.length>0){
+			if(path.indexOf(".")==0){
+				path=path.replace(".",_root);
+			}
+			var tempfile:File=new File(path);
+			if(tempfile.exists==false){
+				continue;
+			}else{
+				_data.filesDict[type]=tempfile;
+			}
+		}
+		var txt:TextArea=this["txt_"+type+"_dir"];
 		if(txt){
-			txt.text=xml.text();
+			txt.text=path;
 		}
 	}
 	
@@ -59,42 +78,59 @@ private function showInfo():void{
 	}
 	_data.export=cfgValue;
 	
+	_data.class_path=_cfgXml.elements('class_path').text();
+	txt_class_path.text=_data.class_path;
 }
 
 /**
  * 检测路径是否正确
  */
-private function checkPath(path:String,backFun:Function):void{
-	var loadFile:Boolean=false;
+private function checkPath(path:String):Boolean{
 	if(path&&path.length>0){
 		if(path.indexOf(".")==0){
 			path=path.replace(".",_root);
 		}
 		var tempfile:File=new File(path);
 		if(tempfile.exists==false){
-			loadFile=true;
-		}else{
-			backFun(tempfile,false);
-			return;
+			return false;
 		}
-	}else{
-		loadFile=true;
 	}
-	if(loadFile){
-		FileUtil.browseForDirectory(browseComplete);
-	}
-	
-	function browseComplete(file:File):void{
-		backFun(file,true);
-	}
+	return true;
 }
+///**
+// * 检测路径是否正确
+// */
+//private function checkPath(path:String,backFun:Function):void{
+//	var loadFile:Boolean=false;
+//	if(path&&path.length>0){
+//		if(path.indexOf(".")==0){
+//			path=path.replace(".",_root);
+//		}
+//		var tempfile:File=new File(path);
+//		if(tempfile.exists==false){
+//			loadFile=true;
+//		}else{
+//			backFun(tempfile,false);
+//			return;
+//		}
+//	}else{
+//		loadFile=true;
+//	}
+//	if(loadFile){
+//		FileUtil.browseForDirectory(browseComplete);
+//	}
+//	
+//	function browseComplete(file:File):void{
+//		backFun(file,true);
+//	}
+//}
 
 
 /**
  *选择完成表格所在目录 
  */
 private function browseSheetDirComplete(file:File,savebool:Boolean=true):void{
-	_data.sheetDir=file;
+	_data.filesDict[GlobalConst.sheet]=file;
 	txt_sheet_dir.text=file.nativePath;
 	if(savebool){
 		_cfgXml.dir.sheet=file.nativePath;
@@ -126,27 +162,17 @@ private function browseDirComplete(file:File):void{
 	
 	switch(_browseBtn){
 		case btn_sheet_dir:
-			_data.sheetDir=file;
+			_data.filesDict[GlobalConst.sheet]=file;
 			txt_sheet_dir.text=file.nativePath;
 			_cfgXml.dir.sheet=file.nativePath;
 			break;
-		case btn_bin_dir:
-			_data.outDict[OutPutType.BIN]=file;
-			txt_bin_dir.text=file.nativePath;
-			_cfgXml.dir.bin=file.nativePath;
-			break;
-		case btn_xml_dir:
-			_data.outDict[OutPutType.XML]=file;
-			txt_xml_dir.text=file.nativePath;
-			_cfgXml.dir.xml=file.nativePath;
-			break;
-		case btn_json_dir:
-			_data.outDict[OutPutType.JSON]=file;
-			txt_json_dir.text=file.nativePath;
-			_cfgXml.dir.json=file.nativePath;
+		case btn_output_dir:
+			_data.filesDict[GlobalConst.output]=file;
+			txt_output_dir.text=file.nativePath;
+			_cfgXml.dir.output=file.nativePath;
 			break;
 		case btn_code_dir:
-			_data.outDict[OutPutType.CODE]=file;
+			_data.filesDict[GlobalConst.CODE]=file;
 			txt_code_dir.text=file.nativePath;
 			_cfgXml.dir.code=file.nativePath;
 			break;
@@ -183,6 +209,42 @@ private function selectExportHandler(evt:Event):void{
 	saveCfg();
 }
 
+private function operateClassPathHandler(evt:Event):void{
+	txt_class_path.editable=!txt_class_path.editable;
+	if(txt_class_path.editable){
+		btn_class_path.label="保存";
+	}else{
+		btn_class_path.label="编辑";
+		_data.class_path=txt_class_path.text;
+		_cfgXml.class_path=_data.class_path;
+		saveCfg();
+	}
+}
+
 private function startHandler(evt:Event=null):void{
+	var temp:File=_data.filesDict[GlobalConst.sheet];
+	if(temp==null||temp.exists==false){
+		Alert.show("请选择配置目录");
+		return;
+	}
 	
+	temp=_data.filesDict[GlobalConst.output];
+	if(temp.exists==false){
+		Alert.show("请选择输出目录");
+		return;
+	}
+	if(_data.format<=0){
+		Alert.show("请选择输出格式");
+		return;
+	}
+	if(_data.format>>3&1){
+		temp=_data.filesDict[GlobalConst.CODE];
+		if(temp==null||temp.exists==false){
+			Alert.show("请选择code输出目录");
+			return;
+		}
+	}
+	
+	
+	trace("start appliction")
 }

@@ -1,11 +1,10 @@
 <root>
   <dir>
     <sheet>C:\Users\Administrator\Desktop\sheet</sheet>
-    <bin/>
-    <xml/>
-    <json/>
+    <output>C:\Users\Administrator\Desktop\output</output>
     <code/>
   </dir>
-  <format>11</format>
-  <export>1</export>
+  <class_path/>
+  <format/>
+  <export/>
 </root>

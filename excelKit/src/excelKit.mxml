@@ -33,35 +33,29 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 	<s:VGroup x="10" y="10">
-		<s:HGroup height="40">
+		<s:HGroup >
 			<s:Label text="表格目录：" width="100"/>
 			<s:TextArea y="20" width="300" height="20" id="txt_sheet_dir" editable="false"/>
 			<s:Button label="浏览" id="btn_sheet_dir" click="btnBrowseDirHandler(event)"/>
 		</s:HGroup>
-		<s:HGroup>
-			<s:Label text="输出bin目录：" width="100"/>
-			<s:TextArea y="20" width="300" height="20" id="txt_bin_dir" editable="false"/>
-			<s:Button label="浏览" id="btn_bin_dir" click="btnBrowseDirHandler(event)"/>
+		<s:HGroup height="40">
+			<s:Label text="输出目录：" width="100"/>
+			<s:TextArea y="20" width="300" height="20" id="txt_output_dir" editable="false"/>
+			<s:Button label="浏览" id="btn_output_dir" click="btnBrowseDirHandler(event)"/>
 		</s:HGroup>
-		<s:HGroup>
-			<s:Label text="输出xml目录：" width="100"/>
-			<s:TextArea y="20" width="300" height="20" id="txt_xml_dir" editable="false"/>
-			<s:Button label="浏览" id="btn_xml_dir" click="btnBrowseDirHandler(event)"/>
-			
-		</s:HGroup>
-		<s:HGroup>
-			<s:Label text="输出json目录：" width="100"/>
-			<s:TextArea y="20" width="300" height="20" id="txt_json_dir" editable="false"/>
-			<s:Button label="浏览" id="btn_json_dir" click="btnBrowseDirHandler(event)"/>
-			
-		</s:HGroup>
-		<s:HGroup height="30">
+		<s:HGroup  >
 			<s:Label text="输出code目录：" width="100"/>
 			<s:TextArea y="20" width="300" height="20" id="txt_code_dir" editable="false"/>
 			<s:Button label="浏览" id="btn_code_dir" click="btnBrowseDirHandler(event)"/>
 			
 		</s:HGroup>
-		<s:HGroup height="30" alignmentBaseline="ideographicBottom">
+		<s:HGroup height="40">
+			<s:Label text="类的包路径" width="100"/>
+			<s:TextArea y="20" width="300" height="20" id="txt_class_path" editable="false"/>
+			<s:Button label="编辑" id="btn_class_path" click="operateClassPathHandler(event)"/>
+		</s:HGroup>
+		
+		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="输出格式：" width="100"/>
 			<s:Label text="bin"/>
 			<s:CheckBox id="box_0" click="selectformatHandler(event)"/>
@@ -79,7 +73,7 @@
 			<s:Label text="后端："/>
 			<s:CheckBox id="export_1" click="selectExportHandler(event)"/>
 		</s:HGroup>
-		<s:Button label="开始运行" id="btn_run" />
+		<s:Button label="开始运行" id="btn_run" click="startHandler(event)" />
 	</s:VGroup>
 	<fx:Script source="Main.as"/>
 </s:WindowedApplication>

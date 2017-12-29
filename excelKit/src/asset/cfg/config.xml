@@ -2,11 +2,10 @@
 <root>
 	<dir>
 		<sheet></sheet>
-		<bin></bin>
-		<xml></xml>
-		<json></json>
+		<output></output>
 		<code></code>
 	</dir>
+	<class_path></class_path>
 	<format></format>
 	<export></export>
 </root>

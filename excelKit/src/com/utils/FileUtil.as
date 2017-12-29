@@ -1,5 +1,7 @@
 package com.utils
 {
+	import com.data.core.HashMap;
+	
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
