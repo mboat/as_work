@@ -229,7 +229,7 @@ private function startHandler(evt:Event=null):void{
 	}
 	
 	temp=_data.filesDict[GlobalConst.output];
-	if(temp.exists==false){
+	if(temp==null||temp.exists==false){
 		Alert.show("请选择输出目录");
 		return;
 	}
@@ -237,12 +237,16 @@ private function startHandler(evt:Event=null):void{
 		Alert.show("请选择输出格式");
 		return;
 	}
-	if(_data.format>>3&1){
+	if(_data.format&1){
 		temp=_data.filesDict[GlobalConst.CODE];
 		if(temp==null||temp.exists==false){
 			Alert.show("请选择code输出目录");
 			return;
 		}
+	}
+	if(_data.export<=0){
+		Alert.show("请选择输出端");
+		return;
 	}
 	
 	

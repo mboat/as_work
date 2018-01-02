@@ -2,9 +2,9 @@
   <dir>
     <sheet>C:\Users\Administrator\Desktop\sheet</sheet>
     <output>C:\Users\Administrator\Desktop\output</output>
-    <code/>
+    <code>C:\Users\Administrator\Desktop\output\code</code>
   </dir>
   <class_path/>
-  <format/>
-  <export/>
+  <format>1</format>
+  <export>2</export>
 </root>

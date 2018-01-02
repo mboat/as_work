@@ -63,7 +63,7 @@
 			<s:CheckBox id="box_1" click="selectformatHandler(event)"/>
 			<s:Label text="json"/>
 			<s:CheckBox id="box_2" click="selectformatHandler(event)"/>
-			<s:Label text="code"/>
+			<s:Label text="code(末位)"/>
 			<s:CheckBox id="box_3" click="selectformatHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup height="30" alignmentBaseline="ideographicBottom">
