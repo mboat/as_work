@@ -1,10 +1,10 @@
 <root>
   <dir>
-    <sheet>C:\Users\Administrator\Desktop\sheet</sheet>
+    <excel>C:\Users\Administrator\Desktop\sheet</excel>
     <output>C:\Users\Administrator\Desktop\output</output>
     <code>C:\Users\Administrator\Desktop\output\code</code>
   </dir>
   <class_path/>
-  <format>1</format>
+  <format>9</format>
   <export>2</export>
 </root>

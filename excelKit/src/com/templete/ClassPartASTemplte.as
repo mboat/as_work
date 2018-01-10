@@ -6,7 +6,7 @@ package com.templete
 	 * @author nos
 	 * 
 	 */	
-	public class ClassPartTemplte
+	public class ClassPartASTemplte
 	{
 		/**
 		 * 写 包及路径 

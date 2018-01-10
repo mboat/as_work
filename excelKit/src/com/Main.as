@@ -1,5 +1,8 @@
-import com.data.core.HashMap;
-import com.type.GlobalConst;
+import com.event.DataEvent;
+import com.event.EventManager;
+import com.event.EventType;
+import com.factory.FileFactory;
+import com.type.CommonConst;
 
 import flash.events.Event;
 import flash.filesystem.File;
@@ -129,11 +132,11 @@ private function checkPath(path:String):Boolean{
 /**
  *选择完成表格所在目录 
  */
-private function browseSheetDirComplete(file:File,savebool:Boolean=true):void{
-	_data.filesDict[GlobalConst.sheet]=file;
-	txt_sheet_dir.text=file.nativePath;
+private function browseExcelDirComplete(file:File,savebool:Boolean=true):void{
+	_data.filesDict[CommonConst.EXCEL_DIR]=file;
+	txt_excel_dir.text=file.nativePath;
 	if(savebool){
-		_cfgXml.dir.sheet=file.nativePath;
+		_cfgXml.dir[CommonConst.EXCEL_DIR]=file.nativePath;
 		saveCfg();
 	}
 }
@@ -161,20 +164,20 @@ protected function btnBrowseDirHandler(event:MouseEvent):void
 private function browseDirComplete(file:File):void{
 	
 	switch(_browseBtn){
-		case btn_sheet_dir:
-			_data.filesDict[GlobalConst.sheet]=file;
-			txt_sheet_dir.text=file.nativePath;
-			_cfgXml.dir.sheet=file.nativePath;
+		case btn_excel_dir:
+			_data.filesDict[CommonConst.EXCEL_DIR]=file;
+			txt_excel_dir.text=file.nativePath;
+			_cfgXml.dir[CommonConst.EXCEL_DIR]=file.nativePath;
 			break;
 		case btn_output_dir:
-			_data.filesDict[GlobalConst.output]=file;
+			_data.filesDict[CommonConst.OUTPUT_DIR]=file;
 			txt_output_dir.text=file.nativePath;
-			_cfgXml.dir.output=file.nativePath;
+			_cfgXml.dir[CommonConst.OUTPUT_DIR]=file.nativePath;
 			break;
 		case btn_code_dir:
-			_data.filesDict[GlobalConst.CODE]=file;
+			_data.filesDict[CommonConst.CODE_DIR]=file;
 			txt_code_dir.text=file.nativePath;
-			_cfgXml.dir.code=file.nativePath;
+			_cfgXml.dir[CommonConst.CODE_DIR]=file.nativePath;
 			break;
 	}
 	saveCfg();
@@ -222,13 +225,13 @@ private function operateClassPathHandler(evt:Event):void{
 }
 
 private function startHandler(evt:Event=null):void{
-	var temp:File=_data.filesDict[GlobalConst.sheet];
+	var temp:File=_data.filesDict[CommonConst.EXCEL_DIR];
 	if(temp==null||temp.exists==false){
 		Alert.show("请选择配置目录");
 		return;
 	}
 	
-	temp=_data.filesDict[GlobalConst.output];
+	temp=_data.filesDict[CommonConst.OUTPUT_DIR];
 	if(temp==null||temp.exists==false){
 		Alert.show("请选择输出目录");
 		return;
@@ -238,7 +241,7 @@ private function startHandler(evt:Event=null):void{
 		return;
 	}
 	if(_data.format&1){
-		temp=_data.filesDict[GlobalConst.CODE];
+		temp=_data.filesDict[CommonConst.CODE_DIR];
 		if(temp==null||temp.exists==false){
 			Alert.show("请选择code输出目录");
 			return;
@@ -249,6 +252,36 @@ private function startHandler(evt:Event=null):void{
 		return;
 	}
 	
-	
-	trace("start appliction")
+	trace("start appliction");
+	startup();
+}
+
+private function startup():void{
+	EventManager.instance().register(EventType.ADD_LIST,addListHandler);
+	FileFactory.instance().startup();
+}
+
+private var options:Array=[];
+private var _running:Boolean=false;
+private function onEnterFrame(evt:Event):void{
+	if(_running==false&&options.length>0){
+		
+		_running=true;
+	}
+	if(options.length<=0){
+		this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
+		_running=false;
+	}
+}
+
+private function addListHandler(evt:com.event.DataEvent):void{
+	var list:Array=evt.data as Array;
+		if(list){
+			options=options.concat(list);
+		}
+		if(options.length>0){
+			if(this.hasEventListener(Event.ENTER_FRAME)==false){
+				this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+			}
+		}
 }

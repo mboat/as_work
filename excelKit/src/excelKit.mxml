@@ -18,7 +18,7 @@
 			protected function windowedapplication1_creationCompleteHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
-				_data=GlobalData.instance;
+				_data=GlobalData.instance();
 				NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);      
 				function onInvokeEvent(invocation:InvokeEvent):void   
 				{   
@@ -35,8 +35,8 @@
 	<s:VGroup x="10" y="10">
 		<s:HGroup >
 			<s:Label text="表格目录：" width="100"/>
-			<s:TextArea y="20" width="300" height="20" id="txt_sheet_dir" editable="false"/>
-			<s:Button label="浏览" id="btn_sheet_dir" click="btnBrowseDirHandler(event)"/>
+			<s:TextArea y="20" width="300" height="20" id="txt_excel_dir" editable="false"/>
+			<s:Button label="浏览" id="btn_excel_dir" click="btnBrowseDirHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup height="40">
 			<s:Label text="输出目录：" width="100"/>
@@ -57,13 +57,13 @@
 		
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="输出格式：" width="100"/>
-			<s:Label text="bin"/>
+			<s:Label text="bin(高位)"/>
 			<s:CheckBox id="box_0" click="selectformatHandler(event)"/>
-			<s:Label text="xml"/>
+			<s:Label text="	xml"/>
 			<s:CheckBox id="box_1" click="selectformatHandler(event)"/>
-			<s:Label text="json"/>
+			<s:Label text="	json"/>
 			<s:CheckBox id="box_2" click="selectformatHandler(event)"/>
-			<s:Label text="code(末位)"/>
+			<s:Label text="	code"/>
 			<s:CheckBox id="box_3" click="selectformatHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup height="30" alignmentBaseline="ideographicBottom">
@@ -75,5 +75,5 @@
 		</s:HGroup>
 		<s:Button label="开始运行" id="btn_run" click="startHandler(event)" />
 	</s:VGroup>
-	<fx:Script source="Main.as"/>
+	<fx:Script source="com/Main.as"/>
 </s:WindowedApplication>

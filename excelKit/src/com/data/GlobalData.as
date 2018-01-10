@@ -39,6 +39,14 @@ package com.data
 		 *生成代码的路径 
 		 */		
 		public var class_path:String;
+		/**
+		 * 指定文件后缀
+		 */		
+		public var fileExts:Array=[".xlsx",".xls"];
+		/**
+		 * 输出格式选择数据
+		 */		
+		public var exportFormatDict:Dictionary =new Dictionary(true);
 		private static var _instance:GlobalData;
 		public function GlobalData()
 		{
@@ -50,7 +58,7 @@ package com.data
 		 * @return 
 		 * 
 		 */		
-		public static function get instance():GlobalData
+		public static function instance():GlobalData
 		{ 
 			if(_instance==null) _instance =new GlobalData();
 			
