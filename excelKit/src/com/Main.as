@@ -1,7 +1,7 @@
 import com.event.DataEvent;
 import com.event.EventManager;
 import com.event.EventType;
-import com.factory.FileFactory;
+import com.factory.FactoryManager;
 import com.type.CommonConst;
 
 import flash.events.Event;
@@ -33,8 +33,8 @@ private function checkCfg():void{
 	
 	showInfo();
 	
-//	path=_cfgXml.dir.sheet;
-//	checkPath(path,browseSheetDirComplete);
+	//	path=_cfgXml.dir.sheet;
+	//	checkPath(path,browseSheetDirComplete);
 }
 
 /**
@@ -252,21 +252,23 @@ private function startHandler(evt:Event=null):void{
 		return;
 	}
 	
-	trace("start appliction");
 	startup();
 }
 
 private function startup():void{
 	EventManager.instance().register(EventType.ADD_LIST,addListHandler);
-	FileFactory.instance().startup();
+	EventManager.instance().register(EventType.GET_LOG_MSG,logHandler);
+	EventManager.instance().register(EventType.FILE_PASER_COMPLETE,oneFileComplete);
+	FactoryManager.instance().startup();
 }
 
 private var options:Array=[];
 private var _running:Boolean=false;
 private function onEnterFrame(evt:Event):void{
 	if(_running==false&&options.length>0){
-		
 		_running=true;
+		txt_log.appendText(">>>>>>已启动\n");
+		FactoryManager.instance().paserExcel(options.shift());
 	}
 	if(options.length<=0){
 		this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
@@ -274,14 +276,31 @@ private function onEnterFrame(evt:Event):void{
 	}
 }
 
+private function oneFileComplete(evt:com.event.DataEvent):void{
+	_running=false;
+}
+
+private var logs:Array=[];
+private var maxLog:int=5000;
+private function logHandler(evt:com.event.DataEvent):void{
+	if(logs.length>maxLog){
+		logs.shift();
+	}
+	var msg:String=evt.data+"\n";
+	logs.push(msg);
+	txt_log.appendText(msg);
+}
+
 private function addListHandler(evt:com.event.DataEvent):void{
 	var list:Array=evt.data as Array;
-		if(list){
-			options=options.concat(list);
+	if(list){
+		options=options.concat(list);
+	}
+	
+	txt_log.appendText(">>>>>>启动处理事件\n");
+	if(options.length>0){
+		if(this.hasEventListener(Event.ENTER_FRAME)==false){
+			this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
 		}
-		if(options.length>0){
-			if(this.hasEventListener(Event.ENTER_FRAME)==false){
-				this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
-			}
-		}
+	}
 }

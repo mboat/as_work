@@ -42,7 +42,7 @@ package com.data
 		/**
 		 * 指定文件后缀
 		 */		
-		public var fileExts:Array=[".xlsx",".xls"];
+		public var fileExts:Array=["xlsx","xls"];
 		/**
 		 * 输出格式选择数据
 		 */		
