@@ -41,7 +41,7 @@ private function checkCfg():void{
  *展示配置信息 
  */
 private function showInfo():void{
-	var list:XMLList =_cfgXml.elements("dir").children();
+	var list:XMLList =_cfgXml.elements(CommonConst.CFG_DIR).children();
 	
 	for(var key:String in list){
 		var xml:XML=list[key];
@@ -64,42 +64,42 @@ private function showInfo():void{
 		}
 	}
 	
-	var cfgValue:int=_cfgXml.elements('format').text();
+	var cfgValue:int=_cfgXml.elements(CommonConst.CLIENT_FORMATS).text();
 	var len:int=_data.formatLen;
 	var i:int=0,result:int;
+	//前端输出各个格式值
 	for(i=0;i<len;i++){
 		result=cfgValue>>(len-i-1)&1;
-		CheckBox(this["box_"+i]).selected=result>0?true:false;
+		CheckBox(this["box_1"+i]).selected=result>0?true:false;
 	}
-	_data.format=cfgValue;
-	
-	cfgValue=_cfgXml.elements('export').text();
-	len=_data.exportLen;
+	_data.client_formats=cfgValue;
+	//后端
+	cfgValue=_cfgXml.elements(CommonConst.SERVER_FORMATS).text();
 	for(i=0;i<len;i++){
 		result=cfgValue>>(len-i-1)&1;
-		CheckBox(this["export_"+i]).selected=result>0?true:false;
+		CheckBox(this["box_2"+i]).selected=result>0?true:false;
 	}
-	_data.export=cfgValue;
+	_data.server_formats=cfgValue;
 	
-	_data.class_path=_cfgXml.elements('class_path').text();
+	_data.class_path=_cfgXml.elements(CommonConst.CLASS_PATH).text();
 	txt_class_path.text=_data.class_path;
 }
 
-/**
- * 检测路径是否正确
- */
-private function checkPath(path:String):Boolean{
-	if(path&&path.length>0){
-		if(path.indexOf(".")==0){
-			path=path.replace(".",_root);
-		}
-		var tempfile:File=new File(path);
-		if(tempfile.exists==false){
-			return false;
-		}
-	}
-	return true;
-}
+///**
+// * 检测路径是否正确
+// */
+//private function checkPath(path:String):Boolean{
+//	if(path&&path.length>0){
+//		if(path.indexOf(".")==0){
+//			path=path.replace(".",_root);
+//		}
+//		var tempfile:File=new File(path);
+//		if(tempfile.exists==false){
+//			return false;
+//		}
+//	}
+//	return true;
+//}
 ///**
 // * 检测路径是否正确
 // */
@@ -167,50 +167,54 @@ private function browseDirComplete(file:File):void{
 		case btn_excel_dir:
 			_data.filesDict[CommonConst.EXCEL_DIR]=file;
 			txt_excel_dir.text=file.nativePath;
-			_cfgXml.dir[CommonConst.EXCEL_DIR]=file.nativePath;
+			_cfgXml[CommonConst.CFG_DIR][CommonConst.EXCEL_DIR]=file.nativePath;
 			break;
 		case btn_output_dir:
 			_data.filesDict[CommonConst.OUTPUT_DIR]=file;
 			txt_output_dir.text=file.nativePath;
-			_cfgXml.dir[CommonConst.OUTPUT_DIR]=file.nativePath;
+			_cfgXml[CommonConst.CFG_DIR][CommonConst.OUTPUT_DIR]=file.nativePath;
 			break;
 		case btn_code_dir:
 			_data.filesDict[CommonConst.CODE_DIR]=file;
 			txt_code_dir.text=file.nativePath;
-			_cfgXml.dir[CommonConst.CODE_DIR]=file.nativePath;
+			_cfgXml[CommonConst.CFG_DIR][CommonConst.CODE_DIR]=file.nativePath;
 			break;
 	}
 	saveCfg();
 }
+
 /**
  *选择输出格式处理函数 
  */
-private function selectformatHandler(evt:Event):void{
+private function clientFormatHandler(evt:Event):void{
 	var format:String="";
 	var len:int=_data.formatLen;
 	for(var i:int=0;i<len;i++){
-		format+=(this["box_"+i] as CheckBox).selected?1:0;
+		format+=(this["box_1"+i] as CheckBox).selected?1:0;
 	}
 	
-	_data.format=parseInt(format,2);
+	_data.client_formats=parseInt(format,2);
 	
-	_cfgXml.format=_data.format;
+	_cfgXml[CommonConst.CLIENT_FORMATS]=_data.client_formats;
 	saveCfg();
 }
+
 /**
- *选择导出端的文件 
+ *选择输出格式处理函数 
  */
-private function selectExportHandler(evt:Event):void{
-	var export:String="";
-	var len:int=_data.exportLen;
+private function serverFormatsHandler(evt:Event):void{
+	var format:String="";
+	var len:int=_data.formatLen;
 	for(var i:int=0;i<len;i++){
-		export+=(this["export_"+i] as CheckBox).selected?1:0;
+		format+=(this["box_2"+i] as CheckBox).selected?1:0;
 	}
-	_data.export=parseInt(export,2);
 	
-	_cfgXml.export=_data.export;
+	_data.server_formats=parseInt(format,2);
+	
+	_cfgXml[CommonConst.SERVER_FORMATS]=_data.server_formats;
 	saveCfg();
 }
+
 
 private function operateClassPathHandler(evt:Event):void{
 	txt_class_path.editable=!txt_class_path.editable;
@@ -219,7 +223,7 @@ private function operateClassPathHandler(evt:Event):void{
 	}else{
 		btn_class_path.label="编辑";
 		_data.class_path=txt_class_path.text;
-		_cfgXml.class_path=_data.class_path;
+		_cfgXml[CommonConst.CLASS_PATH]=_data.class_path;
 		saveCfg();
 	}
 }
@@ -236,22 +240,23 @@ private function startHandler(evt:Event=null):void{
 		Alert.show("请选择输出目录");
 		return;
 	}
-	if(_data.format<=0){
+	if(_data.client_formats<=0){
 		Alert.show("请选择输出格式");
 		return;
 	}
-	if(_data.format&1){
+	if((_data.client_formats&1)){
 		temp=_data.filesDict[CommonConst.CODE_DIR];
 		if(temp==null||temp.exists==false){
 			Alert.show("请选择code输出目录");
 			return;
 		}
 	}
-	if(_data.export<=0){
-		Alert.show("请选择输出端");
+	
+	if(_data.client_formats<=0&&_data.server_formats<=0){
+		Alert.show("选择输出格式和输出方");
 		return;
 	}
-	
+
 	startup();
 }
 

@@ -3,7 +3,6 @@ package com.factory
 	import com.as3xls.xls.Sheet;
 	import com.event.EventManager;
 	import com.event.EventType;
-	import com.type.CommonConst;
 
 	public class BaseProduct
 	{
@@ -15,23 +14,29 @@ package com.factory
 		/**
 		 *输出类型 
 		 */		
-		public var type:int=0;
-		
-		protected var clientBool:Boolean;
-		protected var serverBool:Boolean;
+		public var format:int=0;
+		/**
+		 *输出端 
+		 */		
+		public var port:int=1;
 		public function BaseProduct()
 		{
 		}
+		
 		/**
-		 * 执行函数 
-		 * @param sheet
+		 * 执行解析 
+		 * @param port 输出方
+		 * @param sheet 工作簿数据
+		 * @param names 头部字段数组
+		 * @param typeIndex  type类型所在的index
+		 * @param colIndexs  属于字段的index组
+		 * @param rowIds     条目item的index组
 		 * 
-		 */		
-		public function exec(sheetInfo:Object,port:int=1):void{
+		 */			
+		public function exec(port:int,sheet:Sheet,names:Array=null,typeIndex:int=-1,colIndexs:Array=null,rowIds:Array=null):void{
 			status=0;
-			serverBool=port&CommonConst.EXPORT_SERVER;
-			clientBool=port&CommonConst.EXPORT_CLIENT;
 		}
+		
 		/**
 		 *完成函数 
 		 * 

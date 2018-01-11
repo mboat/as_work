@@ -11,6 +11,8 @@ package com.factory
 	
 	import flash.filesystem.File;
 	import flash.utils.Dictionary;
+	
+	import spark.layouts.RowAlign;
 
 	public class FactoryManager
 	{
@@ -27,9 +29,8 @@ package com.factory
 		
 		private var clientNames:Array=[];
 		private var clientIndexs:Array=[];
-		private var types:Array=[];
-		private var sheetContents:Array=[];
-		
+		private var itemsIndex:Array=[];
+		private var typeIndex:int=-1;
 		private var serverNames:Array=[];
 		private var serverIndexs:Array=[];
 		
@@ -53,9 +54,9 @@ package com.factory
 		
 		private function getDataHandler(evt:DataEvent):void{
 			var endProduct:BaseProduct=evt.data;
-			var dataList:Array=dataDict[endProduct.type];
+			var dataList:Array=dataDict[endProduct.format];
 			if(dataList==null){
-				dataList=dataDict[endProduct.type]=[];
+				dataList=dataDict[endProduct.format]=[];
 			}
 			
 			dataList.push(endProduct.getProducts());
@@ -67,7 +68,7 @@ package com.factory
 			var endProduct:BaseProduct=evt.data;
 			endProduct.reset();
 			
-			var productslist:Array=poolDict[endProduct.type];
+			var productslist:Array=poolDict[endProduct.format];
 			productslist.push(endProduct);
 		}
 		
@@ -76,8 +77,8 @@ package com.factory
 		 */		
 		public function startup():void{
 			
-			serverBool=_data.export&CommonConst.EXPORT_SERVER;
-			clientBool=_data.export&CommonConst.EXPORT_CLIENT;
+			serverBool=_data.server_formats>0;
+			clientBool=_data.client_formats>0;
 			
 			var tempDir:File =_data.filesDict[CommonConst.EXCEL_DIR];
 			var fileList:Array=FileUtil.readFilesByExts(tempDir,_data.fileExts,null,10);
@@ -97,19 +98,11 @@ package com.factory
 			
 			EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
 		}
-		
-		private function exportSheet():void{
-			var format:int=_data.format;
-			var len:int=_data.formatLen;
-			var i:int=0,result:int;
-			for(i=0;i<len;i++){
-				result=format>>(len-i-1)&1;
-				if(result==1){
-					exportProduct(i);
-				}
-			}
-		}
-		
+		/**
+		 * 解析工作簿 
+		 * @param sheet
+		 * 
+		 */				
 		public function paserSheet(sheet:Sheet):void{
 			var msg:String=sheet.name+"_"+sheet.getCell(0,0).value;
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>解析："+msg);
@@ -130,40 +123,45 @@ package com.factory
 			clientIndexs.length=0;
 			serverNames.length=0;
 			serverIndexs.length=0;
-			types.length=0;
-			sheetContents.length=0;
+			typeIndex=2;
+			itemsIndex.length=0;
 			
-			for(var i:int=0;i<3;i++){
+			var headEndIndex:int=4;
+			for(var i:int=1;i<headEndIndex;i++){
 				content=sheet.getCell(i,0).value;
 				if(clientBool&&content==CommonConst.EXCEL_CLIENT){
-					info=readRowToCols(i,cols);
+					info=readRowToCols(sheet,i,cols);
 					clientNames=info.contents;
 					clientIndexs=info.indexs;
 				}
 				
 				if(content==CommonConst.EXCEL_TYPE){
-					info=readRowToCols(i,cols);
-					types=info.contents;
+					typeIndex=i;
 				}
+				
 				if(serverBool&&content==CommonConst.EXCEL_SERVER){
-					info=readRowToCols(i,cols);
+					info=readRowToCols(sheet,i,cols);
 					serverNames=info.contents;
 					serverIndexs=info.indexs;
 				}
 			}
 			
-			for(i=3;i<rows;i++){
+			for(i=headEndIndex;i<rows;i++){
 				content=sheet.getCell(i,0).value;
 				if(content!=CommonConst.EXCEL_NO){
-					info=readRowToCols(i,cols);
-					sheetContents.push(info);
+					itemsIndex.push(i);
 				}
 				if(content!=CommonConst.EXCEL_END){
 					break;
 				}
 			}
 			
-			exportSheet();
+			if(clientBool){
+				exportSheet(CommonConst.EXPORT_CLIENT,_data.client_formats,sheet,clientNames,clientIndexs,typeIndex,itemsIndex);
+			}
+			if(serverBool){
+				exportSheet(CommonConst.EXPORT_SERVER,_data.server_formats,sheet,serverNames,serverIndexs,typeIndex,itemsIndex);
+			}
 			
 		}
 		
@@ -180,30 +178,32 @@ package com.factory
 			return {"contents":contents,"indexs":indexs};
 		}
 		
-		private function exportProduct(type:int):void{
-			var list:Array=poolDict[type];
+		private function exportSheet(port:int,formats:int,sheet:Sheet,names:Array=null,colIndexs:Array=null,typesIndex:int=-1,rowsIndex:Array=null):void{
+			
+			var len:int=_data.formatLen;
+			var i:int=0,result:int;
+			for(i=0;i<len;i++){
+				result=formats>>(len-i-1)&1;
+				if(result==1){
+					exportProduct(port,i,sheet,names,colIndexs,typesIndex,rowsIndex);
+				}
+			}
+		}
+		
+		
+		private function exportProduct(port:int,format:int,sheet:Sheet,names:Array=null,colIndexs:Array=null,typesIndex:int=-1,rowsIndex:Array=null):void{
+			var list:Array=poolDict[format];
 			if(list==null){
-				list=poolDict[type]=[];
+				list=poolDict[format]=[];
 			}
 			var startProduct:BaseProduct=null;
 			if(list.length>0){
 				startProduct=list.shift();
 			}else{
-				startProduct=createProduct(type);
+				startProduct=createProduct(format);
 			}
 			startProduct.reset();
-			
-			var info:Object={};
-			info.clientNames=clientNames;
-			info.clientIndexs=clientIndexs;
-			
-			info.serverNames=serverNames;
-			info.clientIndexs=serverIndexs;
-			
-			info.types =types;
-			info.contents =sheetContents;
-			
-			startProduct.exec(info,_data.export);
+			startProduct.exec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
 		}
 		
 		private function createProduct(type:int):BaseProduct{

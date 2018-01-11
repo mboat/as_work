@@ -6,6 +6,6 @@
 		<code></code>
 	</dir>
 	<class_path></class_path>
-	<format></format>
-	<export></export>
+	<client_formats></client_formats>
+	<server_formats></server_formats>
 </root>

@@ -57,25 +57,33 @@
 			<s:Button label="编辑" id="btn_class_path" click="operateClassPathHandler(event)"/>
 		</s:HGroup>
 		
+		<s:Label text="输出格式：" width="100"/>
+		<s:Label text=""/>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
-			<s:Label text="输出格式：" width="100"/>
+			<s:Label text="前端：" width="100"/>
 			<s:Label text="bin(高位)"/>
-			<s:CheckBox id="box_0" click="selectformatHandler(event)"/>
+			<s:CheckBox id="box_10" click="clientFormatHandler(event)"/>
 			<s:Label text="	xml"/>
-			<s:CheckBox id="box_1" click="selectformatHandler(event)"/>
+			<s:CheckBox id="box_11" click="clientFormatHandler(event)"/>
 			<s:Label text="	json"/>
-			<s:CheckBox id="box_2" click="selectformatHandler(event)"/>
+			<s:CheckBox id="box_12" click="clientFormatHandler(event)"/>
 			<s:Label text="	code"/>
-			<s:CheckBox id="box_3" click="selectformatHandler(event)"/>
+			<s:CheckBox id="box_13" click="clientFormatHandler(event)"/>
 		</s:HGroup>
-		<s:HGroup height="30" alignmentBaseline="ideographicBottom">
-			<s:Label text="输出端：" width="100"/>
-			<s:Label text="前端："/>
-			<s:CheckBox id="export_0" click="selectExportHandler(event)"/>
-			<s:Label text="后端："/>
-			<s:CheckBox id="export_1" click="selectExportHandler(event)"/>
+		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
+			<s:Label text="后端：" width="100"/>
+			<s:Label text="bin(高位)"/>
+			<s:CheckBox id="box_20" click="serverFormatsHandler(event)"/>
+			<s:Label text="	xml"/>
+			<s:CheckBox id="box_21" click="serverFormatsHandler(event)"/>
+			<s:Label text="	json"/>
+			<s:CheckBox id="box_22" click="serverFormatsHandler(event)"/>
+			<s:Label text="	code"/>
+			<s:CheckBox id="box_23" click="serverFormatsHandler(event)"/>
 		</s:HGroup>
-		<s:Button label="开始运行" id="btn_run" click="startHandler(event)" />
+		<s:Group >
+			<s:Button x="200" label="开始运行" id="btn_run" click="startHandler(event)" />
+		</s:Group>
 		
 		<s:Label height="10" />
 		<s:Label text="打印信息" />

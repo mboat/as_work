@@ -3,6 +3,22 @@ package com.type
 	public class CommonConst
 	{
 		/**
+		 *生产代码的类包路径 
+		 */		
+		public static const CLASS_PATH:String='class_path';
+		/**
+		 *前端输出格式的关键字 
+		 */		
+		public static const CLIENT_FORMATS:String="client_formats";
+		/**
+		 *后端输出格式的关键字 
+		 */		
+		public static const SERVER_FORMATS:String="server_formats";
+		/**
+		 *配置目录的关键字 
+		 */		
+		public static const CFG_DIR:String="dir";
+		/**
 		 *配置目录 
 		 */		
 		public static const EXCEL_DIR:String ="excel";

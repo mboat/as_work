@@ -23,18 +23,13 @@ package com.data
 		 */		
 		public var formatLen:int=4;
 		/**
-		 *多个格式的导出值 
+		 *前端多个格式的导出值 
 		 */		
-		public var format:int=0;
+		public var client_formats:int=0;
 		/**
-		 *导出通道个数 
-		 */		
-		public var exportLen:int=2;
-		/**
-		 * 多个端导出值
-		 */		
-		public var export:int=0;
-		
+		 *后端多个格式的导出值 
+		 */	
+		public var server_formats:int=0;		
 		/**
 		 *生成代码的路径 
 		 */		
