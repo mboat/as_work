@@ -12,8 +12,6 @@ package com.factory
 	import flash.filesystem.File;
 	import flash.utils.Dictionary;
 	
-	import spark.layouts.RowAlign;
-
 	public class FactoryManager
 	{
 		private static var _instance:FactoryManager;

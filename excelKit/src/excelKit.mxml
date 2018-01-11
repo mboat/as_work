@@ -58,9 +58,8 @@
 		</s:HGroup>
 		
 		<s:Label text="输出格式：" width="100"/>
-		<s:Label text=""/>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
-			<s:Label text="前端：" width="100"/>
+			<s:Label text="前端："  width="100"/>
 			<s:Label text="bin(高位)"/>
 			<s:CheckBox id="box_10" click="clientFormatHandler(event)"/>
 			<s:Label text="	xml"/>
@@ -72,14 +71,14 @@
 		</s:HGroup>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="后端：" width="100"/>
-			<s:Label text="bin(高位)"/>
-			<s:CheckBox id="box_20" click="serverFormatsHandler(event)"/>
 			<s:Label text="	xml"/>
 			<s:CheckBox id="box_21" click="serverFormatsHandler(event)"/>
 			<s:Label text="	json"/>
 			<s:CheckBox id="box_22" click="serverFormatsHandler(event)"/>
 			<s:Label text="	code"/>
 			<s:CheckBox id="box_23" click="serverFormatsHandler(event)"/>
+			<s:Label text="bin(高位)" visible="false"/>
+			<s:CheckBox id="box_20" visible="false" click="serverFormatsHandler(event)"/>
 		</s:HGroup>
 		<s:Group >
 			<s:Button x="200" label="开始运行" id="btn_run" click="startHandler(event)" />
