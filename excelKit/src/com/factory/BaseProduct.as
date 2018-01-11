@@ -6,6 +6,7 @@ package com.factory
 
 	public class BaseProduct
 	{
+		private var _id:int=0;
 		protected var content:*;
 		/**
 		 * 状态：-1.初始，0.进行重，1.完成 
@@ -18,9 +19,10 @@ package com.factory
 		/**
 		 *输出端 
 		 */		
-		public var port:int=1;
-		public function BaseProduct()
+		public var port:int=-1;
+		public function BaseProduct(sid:int)
 		{
+			_id=sid;
 		}
 		
 		/**
@@ -33,8 +35,9 @@ package com.factory
 		 * @param rowIds     条目item的index组
 		 * 
 		 */			
-		public function exec(port:int,sheet:Sheet,names:Array=null,typeIndex:int=-1,colIndexs:Array=null,rowIds:Array=null):void{
+		public function exec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
 			status=0;
+			port=port;
 		}
 		
 		/**
@@ -48,7 +51,14 @@ package com.factory
 		public function recover():void{
 			EventManager.instance().dispatcherWithEvent(EventType.GET_RECOVER,this);
 		}
-		
+		/**
+		 * 唯一id 
+		 * @return 
+		 * 
+		 */		
+		public function getId():int{
+			return _id;
+		}
 		/**
 		 * 获取当前的数据集 
 		 * @return 
@@ -73,6 +83,7 @@ package com.factory
 		public function reset():void{
 			content=null;
 			status=-1;
+			port=0;
 		}
 	}
 }

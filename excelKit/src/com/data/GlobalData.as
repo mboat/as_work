@@ -43,6 +43,7 @@ package com.data
 		 */		
 		public var exportFormatDict:Dictionary =new Dictionary(true);
 		private static var _instance:GlobalData;
+		
 		public function GlobalData()
 		{
 			

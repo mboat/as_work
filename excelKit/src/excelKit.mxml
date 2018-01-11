@@ -60,7 +60,7 @@
 		<s:Label text="输出格式：" width="100"/>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="前端："  width="100"/>
-			<s:Label text="bin(高位)"/>
+			<s:Label text="(高位)bin"/>
 			<s:CheckBox id="box_10" click="clientFormatHandler(event)"/>
 			<s:Label text="	xml"/>
 			<s:CheckBox id="box_11" click="clientFormatHandler(event)"/>
@@ -77,7 +77,7 @@
 			<s:CheckBox id="box_22" click="serverFormatsHandler(event)"/>
 			<s:Label text="	code"/>
 			<s:CheckBox id="box_23" click="serverFormatsHandler(event)"/>
-			<s:Label text="bin(高位)" visible="false"/>
+			<s:Label text="(高位)bin" visible="false"/>
 			<s:CheckBox id="box_20" visible="false" click="serverFormatsHandler(event)"/>
 		</s:HGroup>
 		<s:Group >

@@ -24,16 +24,21 @@ package com.amf3
 			defaultContent=value;
 			dict[id]=this;
 		}
-		
+		/**
+		 * 类型字符串 
+		 * @param key
+		 * @return 
+		 * 
+		 */		
 		public static function getEAmf3TypeByKey(key:String):EAmf3Type{
-			
+			return EAmf3Type["AMF_"+key.toLocaleLowerCase()];
 		}
 		
 		/**
 		 *空 
 		 */		
 		public static var AMF_null:EAmf3Type=new EAmf3Type(index++,"null",writeNull,readNull);
-		public static function writeNull(bytes:ByteArray):void{
+		public static function writeNull(bytes:ByteArray,value:*=null):void{
 			bytes.writeByte(AMF_null.id);
 		}
 		public static function readNull(bytes:ByteArray):*{

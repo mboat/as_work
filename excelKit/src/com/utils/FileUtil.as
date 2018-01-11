@@ -131,6 +131,29 @@ package com.utils
 				}
 			}            
 		}
+		
+		/**保存文件
+		 * @param vpath 文件保存带名字路径 /cookie.txt;
+		 * @param bytes 保存的二进制
+		 */		
+		public static function saveBytesFile(vpath:String,bytes:ByteArray,callFun:Function=null):void
+		{
+			var vfile:File=new File(vpath);
+			if(vfile==null)return;
+			var fileStream:FileStream = new FileStream();
+			fileStream.openAsync(vfile, FileMode.WRITE);
+			fileStream.writeBytes(bytes,0,bytes.length);
+			//			fileStream.writeMultiByte(txt, "gb2312");
+			fileStream.addEventListener(Event.CLOSE, fileClosed);
+			fileStream.close();
+			
+			function fileClosed(event:Event):void {
+				trace(vfile.name+"保存完成。");
+				if(callFun!=null){
+					callFun.apply();
+				}
+			}            
+		}
 		/**将文件转成二进制数据
 		 * @param path 文件路径
 		 * @return 

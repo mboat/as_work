@@ -32,6 +32,8 @@ package com.factory
 		private var serverNames:Array=[];
 		private var serverIndexs:Array=[];
 		
+		
+		private var _runningList:Array=[];
 		public function FactoryManager()
 		{
 			_data=GlobalData.instance();
@@ -57,6 +59,10 @@ package com.factory
 				dataList=dataDict[endProduct.format]=[];
 			}
 			
+			var runIndex:int=_runningList.indexOf(endProduct.getId());
+			if(runIndex>=0){
+				_runningList.splice(runIndex,1);
+			}
 			dataList.push(endProduct.getProducts());
 			
 			endProduct.recover();
@@ -86,6 +92,8 @@ package com.factory
 		
 		
 		public function paserExcel(file:File):void{
+			
+			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>正在处理文件："+file.nativePath);
 			var excelFile:ExcelFile=new ExcelFile();
 			excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
 			
@@ -93,7 +101,7 @@ package com.factory
 			for(var i:int=0;i<sheetLen;i++){
 				paserSheet(excelFile.sheets[i]);
 			}
-			
+			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
 			EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
 		}
 		/**
@@ -194,28 +202,37 @@ package com.factory
 			if(list==null){
 				list=poolDict[format]=[];
 			}
+			
 			var startProduct:BaseProduct=null;
 			if(list.length>0){
 				startProduct=list.shift();
 			}else{
 				startProduct=createProduct(format);
 			}
-			startProduct.reset();
-			startProduct.exec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
+			
+			if(startProduct){
+				_runningList.push(startProduct.getId());
+				startProduct.reset();
+				startProduct.exec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
+			}else{
+				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>无法解析类型："+format);
+			}
+			
 		}
 		
+		private var sn:int=0;
 		private function createProduct(type:int):BaseProduct{
 			switch(type){
 				case CommonConst.BIN:
-					return new BinProduct();
+					return new BinProduct(sn++);
 				case CommonConst.XML:
-					return new XmlProduct();
+					return new XmlProduct(sn++);
 				case CommonConst.JSON:
-					return new JsonProduct();
+					return new JsonProduct(sn++);
 				case CommonConst.CODE:
-					return new CodeProduct();
+					return new CodeProduct(sn++);
 			}
-			return new BaseProduct();
+			return null;
 		}
 	}
 }

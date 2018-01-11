@@ -5,13 +5,13 @@ package com.factory
 
 	public class JsonProduct extends BaseProduct
 	{
-		public function JsonProduct()
+		public function JsonProduct(sid:int)
 		{
+			super(sid);
 			format=CommonConst.JSON;
-			super();
 		}
-		override public function exec(port:int,sheet:Sheet,names:Array=null,typeIndex:int=-1,colIndexs:Array=null,rowIds:Array=null):void{
-			super.exec(port,sheet,names,typeIndex,colIndexs,rowIds);		
+		override public function exec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
+			super.exec(port,sheet,names,typeIndex,colIndexs,rowIds);	
 		}
 	}
 }
