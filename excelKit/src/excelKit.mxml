@@ -71,14 +71,14 @@
 		</s:HGroup>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="后端：" width="100"/>
+			<s:Label text="(高位)bin"/>
+			<s:CheckBox id="box_20" click="serverFormatsHandler(event)"/>
 			<s:Label text="	xml"/>
 			<s:CheckBox id="box_21" click="serverFormatsHandler(event)"/>
 			<s:Label text="	json"/>
 			<s:CheckBox id="box_22" click="serverFormatsHandler(event)"/>
-			<s:Label text="	code"/>
-			<s:CheckBox id="box_23" click="serverFormatsHandler(event)"/>
-			<s:Label text="(高位)bin" visible="false"/>
-			<s:CheckBox id="box_20" visible="false" click="serverFormatsHandler(event)"/>
+			<s:Label text="	code" visible="false"/>
+			<s:CheckBox id="box_23" visible="false" click="serverFormatsHandler(event)"/>
 		</s:HGroup>
 		<s:Group >
 			<s:Button x="200" label="开始运行" id="btn_run" click="startHandler(event)" />

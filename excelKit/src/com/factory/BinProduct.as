@@ -51,9 +51,9 @@ package com.factory
 					etype.writeFunction.apply(null,[bytes,item]);
 				}
 			}
-			var outFile:File=GlobalData.instance().filesDict[CommonConst.OUTPUT_DIR];
-			var path:String=outFile.nativePath+"/server/"+sheet.name+".bin";
-			FileUtil.saveBytesFile(path,bytes,saveComplete);
+			
+			//保存 .bin
+			saveBytesFile(getOutputNativePath(sheet.name),bytes,saveComplete);
 		}
 		
 		private function saveComplete():void{

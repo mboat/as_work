@@ -23,7 +23,7 @@ package com.templete
 			
 			content +="\n{\n";
 			
-			return [content,"\n}\n";
+			return [content,"\n}\n"];
 		}
 		/**
 		 * 写 类的引用 部分 
@@ -105,12 +105,12 @@ package com.templete
 		 * @param varName
 		 * @param packsafe
 		 * @param type
-		 * @param static
+		 * @param staticBool
 		 * @param initData
 		 * @return 
 		 * 
 		 */		
-		public static function writeMemberVariable(varName:String,packsafe:int,type:String,static:Boolean=false,initData:String=null):String
+		public static function writeMemberVariable(varName:String,packsafe:int,type:String,staticBool:Boolean=false,initData:String=null):String
 		{
 			var tabs:String="		";
 			var content:String=tabs;
@@ -123,12 +123,11 @@ package com.templete
 			else {
 				content+="private ";
 			}
-			if(static){
+			
+			if(staticBool){
 				content+="static ";
 			}
-			if(static){
-				content+="static ";
-			}
+			
 			
 			content +="var "+varName +" :"+type;
 			if(initData&&initData.length>0){
@@ -143,7 +142,7 @@ package com.templete
 		 * @return 
 		 * 
 		 */		
-		public function writeSingleNote(descr:String):String
+		public static function writeSingleNote(descr:String):String
 		{
 			var tabs:String="		";
 			return tabs+"//"+descr+"\n";
@@ -156,7 +155,7 @@ package com.templete
 		 * @return 
 		 * 
 		 */		
-		public function writeMultiNote(descr:String,args:Object=null,classNote:Boolean=false):String{
+		public static function writeMultiNote(descr:String,args:Object=null,classNote:Boolean=false):String{
 			var tabs:String="		";
 			if(classNote){
 				tabs="	";
@@ -177,7 +176,7 @@ package com.templete
 		 * @return 
 		 * 
 		 */		
-		public function writeBindable():String
+		public static function writeBindable():String
 		{
 			var tabs:String ="		";
 			return tabs+"[Bindable]\n";
@@ -190,7 +189,7 @@ package com.templete
 		 * @return 
 		 * 
 		 */		
-		public function writeEmbed(urlPath:String,mimeType:String):String{
+		public static function writeEmbed(urlPath:String,mimeType:String):String{
 			var tabs:String ="		";
 			var content:String=tabs;
 			content +="[Embed(source ='"+urlPath+"', mimeType ='"+mimeType+"')]\n";

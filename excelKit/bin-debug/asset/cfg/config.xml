@@ -2,9 +2,9 @@
   <dir>
     <excel>C:\Users\Administrator\Desktop\sheet</excel>
     <output>C:\Users\Administrator\Desktop\output</output>
-    <code>C:\Users\Administrator\Desktop\output\code</code>
+    <code>C:\Users\Administrator\Desktop\code</code>
   </dir>
-  <class_path/>
-  <client_formats>8</client_formats>
-  <server_formats>0</server_formats>
+  <class_path>com.cfg</class_path>
+  <client_formats>9</client_formats>
+  <server_formats>8</server_formats>
 </root>

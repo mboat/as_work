@@ -117,6 +117,9 @@ package com.utils
 		{
 			var vfile:File=new File(vpath);
 			if(vfile==null)return;
+			if(vfile.exists==true){
+				vfile.deleteFile();
+			}
 			var fileStream:FileStream = new FileStream();
 			fileStream.openAsync(vfile, FileMode.WRITE);
 			fileStream.writeUTFBytes(txt);
@@ -140,6 +143,9 @@ package com.utils
 		{
 			var vfile:File=new File(vpath);
 			if(vfile==null)return;
+			if(vfile.exists==true){
+				vfile.deleteFile();
+			}
 			var fileStream:FileStream = new FileStream();
 			fileStream.openAsync(vfile, FileMode.WRITE);
 			fileStream.writeBytes(bytes,0,bytes.length);

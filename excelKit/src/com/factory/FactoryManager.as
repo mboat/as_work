@@ -34,6 +34,7 @@ package com.factory
 		
 		
 		private var _runningList:Array=[];
+		private var sn:int=0;
 		public function FactoryManager()
 		{
 			_data=GlobalData.instance();
@@ -95,14 +96,15 @@ package com.factory
 			
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>正在处理文件："+file.nativePath);
 			var excelFile:ExcelFile=new ExcelFile();
-			excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
 			
-			var sheetLen:int=excelFile.sheets.length;
-			for(var i:int=0;i<sheetLen;i++){
-				paserSheet(excelFile.sheets[i]);
-			}
-			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
-			EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
+				excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
+				
+				var sheetLen:int=excelFile.sheets.length;
+				for(var i:int=0;i<sheetLen;i++){
+					paserSheet(excelFile.sheets[i]);
+				}
+				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
+				EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
 		}
 		/**
 		 * 解析工作簿 
@@ -110,10 +112,8 @@ package com.factory
 		 * 
 		 */				
 		public function paserSheet(sheet:Sheet):void{
-			var msg:String=sheet.name+"_"+sheet.getCell(0,0).value;
+			var msg:String=sheet.name+"-"+sheet.getCell(0,0).value;
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>解析："+msg);
-			trace("**********************"+msg+"******************************************");
-			
 			var exportName:String=sheet.getCell(0,0).value;
 			if(exportName==null||exportName.length==0){
 				return;
@@ -220,7 +220,7 @@ package com.factory
 			
 		}
 		
-		private var sn:int=0;
+		
 		private function createProduct(type:int):BaseProduct{
 			switch(type){
 				case CommonConst.BIN:
