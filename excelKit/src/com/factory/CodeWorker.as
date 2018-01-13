@@ -43,6 +43,8 @@ package com.factory
 				
 				itemType=sheet.getCell(typeIndex,colIndex).value;
 				var etype:EAmf3Type=EAmf3Type.getEAmf3TypeByKey(itemType);
+				
+				preList.push(ClassPartASTemplte.writeMultiNote(sheet.getCell(0,colIndex).value));
 				preList.push(ClassPartASTemplte.writeMemberVariable(member,1,etype.codes[CodeExportType.AS3],false,etype.initData));
 			}
 			

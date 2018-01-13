@@ -299,7 +299,9 @@ private function startHandler(evt:Event=null):void{
 		Alert.show("请选择输出目录");
 		return;
 	}
-	if((_data.client_formats&1)){
+	
+	var needCheck:Boolean=((_data.client_formats>>(_data.formatLen-CommonConst.CODE-1))&1)>0;
+	if(needCheck){
 		temp=_data.filesDict[CommonConst.CODE_DIR];
 		if(temp==null||temp.exists==false){
 			Alert.show("请选择code输出目录");
@@ -334,8 +336,8 @@ private function onEnterFrame(evt:Event):void{
 		else{
 			txt_log.appendText(">>>>>>暂时开放该类数据源解析，格式类型："+_data.origin_format+"\n");
 		}
-		
 	}
+	
 	if(options.length<=0){
 		this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
 		_running=false;

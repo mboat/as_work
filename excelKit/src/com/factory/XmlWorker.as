@@ -5,6 +5,8 @@ package com.factory
 	import com.as3xls.xls.Sheet;
 	import com.templete.ClassPartASTemplte;
 	import com.type.CommonConst;
+	
+	import flash.xml.XMLDocument;
 
 	public class XmlWorker extends BaseWorker
 	{
@@ -25,6 +27,16 @@ package com.factory
 			var keyLen:int=names.length;
 			var colIndex:int=0;
 			var rowIndex:int=0;
+			
+			var tmpXml:XMLList =new XMLList("<templete/>");
+			for (i = 0; i < keyLen; i++) 
+			{
+				colIndex=colIndexs[i];
+				var mdXml:XMLList=new XMLList("<"+names[i]+"/>");
+				mdXml.appendChild(sheet.getCell(rowIndex,colIndex).value);
+				mdXml.@type=sheet.getCell(typeIndex,colIndex).value;
+				tmpXml.appendChild(mdXml);
+			}
 			for (i = 0; i < len; i++) 
 			{
 				rowIndex=rowIds[i];
@@ -40,9 +52,10 @@ package com.factory
 				
 				xml.appendChild(subxml);
 			}
-			
+			var xmlWords:String=headpart+xml.toXMLString();
+			xmlWords=xmlWords.replace("<list>","<list>\n<!--"+tmpXml.toXMLString()+"-->");
 			//保存 .xml
-			saveTxtFile(getOutputNativePath(sheet.name),headpart+xml.toXMLString(),completeAndRecoverWorker);
+			saveTxtFile(getOutputNativePath(sheet.name),xmlWords,completeAndRecoverWorker);
 		}
 		
 	}
