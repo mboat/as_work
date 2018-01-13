@@ -299,10 +299,6 @@ private function startHandler(evt:Event=null):void{
 		Alert.show("请选择输出目录");
 		return;
 	}
-	if(_data.client_formats<=0){
-		Alert.show("请选择输出格式");
-		return;
-	}
 	if((_data.client_formats&1)){
 		temp=_data.filesDict[CommonConst.CODE_DIR];
 		if(temp==null||temp.exists==false){
@@ -343,6 +339,7 @@ private function onEnterFrame(evt:Event):void{
 	if(options.length<=0){
 		this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
 		_running=false;
+		this.exit();
 	}
 }
 

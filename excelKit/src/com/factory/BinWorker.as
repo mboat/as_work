@@ -48,12 +48,7 @@ package com.factory
 			}
 			
 			//保存 .bin
-			saveBytesFile(getOutputNativePath(sheet.name),bytes,saveComplete);
-		}
-		
-		private function saveComplete():void{
-			complete();
-			recover();
+			saveBytesFile(getOutputNativePath(sheet.name),bytes,completeAndRecoverWorker);
 		}
 	}
 }

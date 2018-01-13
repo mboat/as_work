@@ -50,13 +50,10 @@ package com.factory
 			addCodes(ClassPartASTemplte.writeFunction(className));
 			
 			//保存 .as
-			saveTxtFile(getCodeNativePath(className),mergeCodeWords(),saveComplete);
+			saveTxtFile(getCodeNativePath(className),mergeCodeWords(),completeAndRecoverWorker);
 		}
 		
-		private function saveComplete():void{
-			complete();
-			recover();
-		}
+		
 		
 		private function addCodes(codes:Array):void{
 			preList.push(codes[0]);

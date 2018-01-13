@@ -110,6 +110,11 @@ package com.factory
 			}
 		}
 		
+		protected function completeAndRecoverWorker():void{
+			complete();
+			recover();
+		}
+		
 		/**
 		 * 获取保存文件路径 
 		 * @param fileName
@@ -117,7 +122,26 @@ package com.factory
 		 * 
 		 */		
 		public function getOutputNativePath(fileName:String):String{
-			return getOutputPath()+"/"+getPortFileName()+"/"+fileName+getSuffix();
+			return getOutputPath()+"/"+getPortFileName()+"/"+getFormatFileName()+"/"+fileName+getSuffix();
+		}
+		
+		public function getFormatFileName():String{
+			if(format==CommonConst.BIN){
+				return "bin";
+			}
+			else if(format==CommonConst.XML){
+				return "xml";
+			}
+			else if(format==CommonConst.JSON){
+				return "json";
+			}
+			else if(format==CommonConst.CODE){
+				return "as";
+			}
+			else if(format==CommonConst.EXCEL){
+				return "xls";
+			}
+			return "";
 		}
 		
 		/**
@@ -160,19 +184,7 @@ package com.factory
 		 * 
 		 */		
 		protected function getSuffix():String{
-			if(format==CommonConst.BIN){
-				return ".bin";
-			}
-			else if(format==CommonConst.XML){
-				return ".xml";
-			}
-			else if(format==CommonConst.JSON){
-				return ".json";
-			}
-			else if(format==CommonConst.CODE){
-				return ".as";
-			}
-			return "";
+			return "."+getFormatFileName();
 		}
 		
 		/**获取输出端文件夹名字*/		
