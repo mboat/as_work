@@ -10,7 +10,7 @@ package com.factory
 	import flash.filesystem.File;
 	import flash.utils.ByteArray;
 
-	public class BaseProduct
+	public class BaseWorker
 	{
 		/**
 		 *w唯一id 
@@ -38,7 +38,7 @@ package com.factory
 		 */		
 		private var _codePath:String;
 		
-		public function BaseProduct(sid:int)
+		public function BaseWorker(sid:int)
 		{
 			_id=sid;
 		}
@@ -69,9 +69,13 @@ package com.factory
 		 * @param rowIds     条目item的index组
 		 * 
 		 */			
-		public function exec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
+		public function excelExec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
 			status=0;
 			_port=port;
+		}
+		
+		public function xmlExec():void{
+			
 		}
 		/**
 		 * 保存二进制文件 

@@ -10,6 +10,7 @@ import flash.filesystem.File;
 import mx.controls.Alert;
 
 import spark.components.CheckBox;
+import spark.components.RadioButton;
 import spark.components.TextArea;
 
 // ActionScript file
@@ -64,25 +65,64 @@ private function showInfo():void{
 		}
 	}
 	
-	var cfgValue:int=_cfgXml.elements(CommonConst.CLIENT_FORMATS).text();
 	var len:int=_data.formatLen;
-	var i:int=0,result:int;
-	//前端输出各个格式值
+	var i:int=0,result:int=0;
+	var cfgValue:int=0;
+	
+	//数据源格式
+	cfgValue=_cfgXml.elements(CommonConst.ORIGIN_FORMAT).text();
 	for(i=0;i<len;i++){
-		result=cfgValue>>(len-i-1)&1;
-		CheckBox(this["box_1"+i]).selected=result>0?true:false;
+		RadioButton(this["org_1"+i]).selected=(cfgValue==i);
 	}
+	_data.origin_format=cfgValue;
+	
+	
+	//前端输出各个格式值
+	cfgValue=_cfgXml.elements(CommonConst.CLIENT_FORMATS).text();
 	_data.client_formats=cfgValue;
 	//后端
 	cfgValue=_cfgXml.elements(CommonConst.SERVER_FORMATS).text();
-	for(i=0;i<len;i++){
-		result=cfgValue>>(len-i-1)&1;
-		CheckBox(this["box_2"+i]).selected=result>0?true:false;
-	}
 	_data.server_formats=cfgValue;
 	
+	//code的类路径	
 	_data.class_path=_cfgXml.elements(CommonConst.CLASS_PATH).text();
 	txt_class_path.text=_data.class_path;
+	
+	updateExportUI();
+}
+
+private function updateExportUI(inited:Boolean=true):void{
+	var len:int=_data.formatLen;
+	var i:int=0,result:int=0;
+	var cfgValue:int=0;
+	
+	var formats:Array=_data.getOriginFormats(_data.origin_format);
+	//前端输出各个格式值
+	cfgValue=_data.client_formats;
+	var tempBox:CheckBox=null;
+	for(i=0;i<len;i++){
+		tempBox=CheckBox(this["box_1"+i]);
+		tempBox.enabled=formats.indexOf(i)>=0;
+		if(inited&&tempBox.enabled){
+			result=cfgValue>>(len-i-1)&1;
+			tempBox.selected=result>0?true:false;
+		}else{
+			tempBox.selected=false;
+		}
+	}
+	
+	//后端
+	cfgValue=_data.server_formats;
+	for(i=0;i<len;i++){
+		tempBox=CheckBox(this["box_2"+i]);
+		tempBox.enabled=formats.indexOf(i)>=0;
+		if(inited&&tempBox.enabled){
+			result=cfgValue>>(len-i-1)&1;
+			tempBox.selected=result>0?true:false;
+		}else{
+			tempBox.selected=false;
+		}
+	}
 }
 
 ///**
@@ -132,11 +172,11 @@ private function showInfo():void{
 /**
  *选择完成表格所在目录 
  */
-private function browseExcelDirComplete(file:File,savebool:Boolean=true):void{
-	_data.filesDict[CommonConst.EXCEL_DIR]=file;
-	txt_excel_dir.text=file.nativePath;
+private function browseOrgDirComplete(file:File,savebool:Boolean=true):void{
+	_data.filesDict[CommonConst.ORIGIN_DIR]=file;
+	txt_origin_dir.text=file.nativePath;
 	if(savebool){
-		_cfgXml.dir[CommonConst.EXCEL_DIR]=file.nativePath;
+		_cfgXml.dir[CommonConst.ORIGIN_DIR]=file.nativePath;
 		saveCfg();
 	}
 }
@@ -164,10 +204,10 @@ protected function btnBrowseDirHandler(event:MouseEvent):void
 private function browseDirComplete(file:File):void{
 	
 	switch(_browseBtn){
-		case btn_excel_dir:
-			_data.filesDict[CommonConst.EXCEL_DIR]=file;
-			txt_excel_dir.text=file.nativePath;
-			_cfgXml[CommonConst.CFG_DIR][CommonConst.EXCEL_DIR]=file.nativePath;
+		case btn_origin_dir:
+			_data.filesDict[CommonConst.ORIGIN_DIR]=file;
+			txt_origin_dir.text=file.nativePath;
+			_cfgXml[CommonConst.CFG_DIR][CommonConst.ORIGIN_DIR]=file.nativePath;
 			break;
 		case btn_output_dir:
 			_data.filesDict[CommonConst.OUTPUT_DIR]=file;
@@ -196,7 +236,6 @@ private function clientFormatHandler(evt:Event):void{
 	_data.client_formats=parseInt(format,2);
 	
 	_cfgXml[CommonConst.CLIENT_FORMATS]=_data.client_formats;
-	saveCfg();
 }
 
 /**
@@ -212,7 +251,25 @@ private function serverFormatsHandler(evt:Event):void{
 	_data.server_formats=parseInt(format,2);
 	
 	_cfgXml[CommonConst.SERVER_FORMATS]=_data.server_formats;
-	saveCfg();
+}
+
+/**
+ *选择输出格式处理函数 
+ */
+private function originFormatHandler(evt:Event):void{
+	var len:int=_data.formatLen;
+	for(var i:int=0;i<len;i++){
+		var radioBtn:RadioButton=(this["org_1"+i] as RadioButton);
+		if(radioBtn==evt.currentTarget){
+			_data.origin_format=i;
+			radioBtn.selected=true;
+		}else{
+			radioBtn.selected=false;
+		}
+	}
+	_cfgXml[CommonConst.ORIGIN_FORMAT]=_data.origin_format;
+	
+	updateExportUI();
 }
 
 
@@ -229,7 +286,9 @@ private function operateClassPathHandler(evt:Event):void{
 }
 
 private function startHandler(evt:Event=null):void{
-	var temp:File=_data.filesDict[CommonConst.EXCEL_DIR];
+	saveCfg();
+	
+	var temp:File=_data.filesDict[CommonConst.ORIGIN_DIR];
 	if(temp==null||temp.exists==false){
 		Alert.show("请选择配置目录");
 		return;
@@ -273,7 +332,13 @@ private function onEnterFrame(evt:Event):void{
 	if(_running==false&&options.length>0){
 		_running=true;
 		txt_log.appendText(">>>>>>已启动\n");
-		FactoryManager.instance().paserExcel(options.shift());
+		if(_data.origin_format==CommonConst.EXCEL){
+			FactoryManager.instance().paserExcel(options.shift());
+		}
+		else{
+			txt_log.appendText(">>>>>>暂时开放该类数据源解析，格式类型："+_data.origin_format+"\n");
+		}
+		
 	}
 	if(options.length<=0){
 		this.removeEventListener(Event.ENTER_FRAME,onEnterFrame);
@@ -302,10 +367,12 @@ private function addListHandler(evt:com.event.DataEvent):void{
 		options=options.concat(list);
 	}
 	
-	txt_log.appendText(">>>>>>启动处理事件\n");
 	if(options.length>0){
+		txt_log.appendText(">>>>>>启动处理事件\n");
 		if(this.hasEventListener(Event.ENTER_FRAME)==false){
 			this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
 		}
+	}else{
+		txt_log.appendText(">>>>>>当前选择的目录下，没有该类型的文件。\n");
 	}
 }

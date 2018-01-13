@@ -52,9 +52,13 @@ package com.factory
 			return _instance;
 		}
 		
-		
+		/**
+		 * 收集数据处理函数 
+		 * @param evt
+		 * 
+		 */		
 		private function getDataHandler(evt:DataEvent):void{
-			var endProduct:BaseProduct=evt.data;
+			var endProduct:BaseWorker=evt.data;
 			var dataList:Array=dataDict[endProduct.format];
 			if(dataList==null){
 				dataList=dataDict[endProduct.format]=[];
@@ -68,9 +72,13 @@ package com.factory
 			
 			endProduct.recover();
 		}
-		
+		/**
+		 * 回收产品利用函数 
+		 * @param evt
+		 * 
+		 */		
 		private function getRecoverHandler(evt:DataEvent):void{
-			var endProduct:BaseProduct=evt.data;
+			var endProduct:BaseWorker=evt.data;
 			endProduct.reset();
 			
 			var productslist:Array=poolDict[endProduct.format];
@@ -85,26 +93,30 @@ package com.factory
 			serverBool=_data.server_formats>0;
 			clientBool=_data.client_formats>0;
 			
-			var tempDir:File =_data.filesDict[CommonConst.EXCEL_DIR];
-			var fileList:Array=FileUtil.readFilesByExts(tempDir,_data.fileExts,null,10);
+			var tempDir:File =_data.filesDict[CommonConst.ORIGIN_DIR];
+			var fileList:Array=FileUtil.readFilesByExts(tempDir,_data.getExtsByOrigin(_data.origin_format),null,10);
 			EventManager.instance().dispatcherWithEvent(EventType.ADD_LIST,fileList);
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>读取表格文件完成");
 		}
 		
-		
+		/**
+		 * 解析表格数据源
+		 * @param file
+		 * 
+		 */		
 		public function paserExcel(file:File):void{
 			
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>正在处理文件："+file.nativePath);
 			var excelFile:ExcelFile=new ExcelFile();
 			
-				excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
-				
-				var sheetLen:int=excelFile.sheets.length;
-				for(var i:int=0;i<sheetLen;i++){
-					paserSheet(excelFile.sheets[i]);
-				}
-				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
-				EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
+			excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
+			
+			var sheetLen:int=excelFile.sheets.length;
+			for(var i:int=0;i<sheetLen;i++){
+				paserSheet(excelFile.sheets[i]);
+			}
+			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
+			EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
 		}
 		/**
 		 * 解析工作簿 
@@ -203,7 +215,7 @@ package com.factory
 				list=poolDict[format]=[];
 			}
 			
-			var startProduct:BaseProduct=null;
+			var startProduct:BaseWorker=null;
 			if(list.length>0){
 				startProduct=list.shift();
 			}else{
@@ -213,7 +225,7 @@ package com.factory
 			if(startProduct){
 				_runningList.push(startProduct.getId());
 				startProduct.reset();
-				startProduct.exec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
+				startProduct.excelExec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
 			}else{
 				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>无法解析类型："+format);
 			}
@@ -221,16 +233,16 @@ package com.factory
 		}
 		
 		
-		private function createProduct(type:int):BaseProduct{
+		private function createProduct(type:int):BaseWorker{
 			switch(type){
 				case CommonConst.BIN:
-					return new BinProduct(sn++);
+					return new BinWorker(sn++);
 				case CommonConst.XML:
-					return new XmlProduct(sn++);
+					return new XmlWorker(sn++);
 				case CommonConst.JSON:
-					return new JsonProduct(sn++);
+					return new JsonWorker(sn++);
 				case CommonConst.CODE:
-					return new CodeProduct(sn++);
+					return new CodeWorker(sn++);
 			}
 			return null;
 		}

@@ -1,10 +1,11 @@
 <root>
   <dir>
-    <excel>C:\Users\Administrator\Desktop\sheet</excel>
+    <origin>C:\Users\Administrator\Desktop\sheet</origin>
     <output>C:\Users\Administrator\Desktop\output</output>
     <code>C:\Users\Administrator\Desktop\code</code>
   </dir>
-  <class_path>com.cfg</class_path>
-  <client_formats>9</client_formats>
-  <server_formats>8</server_formats>
+  <class_path/>
+  <client_formats>2</client_formats>
+  <server_formats/>
+  <origin_format>4</origin_format>
 </root>

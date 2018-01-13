@@ -6,27 +6,27 @@ package com.factory
 	import com.data.GlobalData;
 	import com.templete.ClassPartASTemplte;
 	import com.type.CommonConst;
-	public class CodeProduct extends BaseProduct
+	public class CodeWorker extends BaseWorker
 	{
 		private var preList:Array=[];
 		private var afterList:Array=[];
-		public function CodeProduct(sid:int)
+		public function CodeWorker(sid:int)
 		{
 			super(sid);
 			format=CommonConst.CODE;
 		}
-		override public function exec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
-			super.exec(port,sheet,names,typeIndex,colIndexs,rowIds);
+		override public function excelExec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
+			super.excelExec(port,sheet,names,typeIndex,colIndexs,rowIds);
 			
 			
 			//package包
 			var classPath:String = GlobalData.instance().class_path;
 			addCodes(ClassPartASTemplte.writePackage(classPath));
 			
-			//class的注释
-			preList.push(ClassPartASTemplte.writeMultiNote('配置生成类：'+sheet.name,{'author':"工具",'time':new Date()},true));
-			
 			var className:String=sheet.name+"CfgVo";
+			//class的注释
+			preList.push(ClassPartASTemplte.writeMultiNote('配置生成类：'+className,{'author':"工具",'time':new Date()},true));
+			
 			//class 部分
 			addCodes(ClassPartASTemplte.writeClass(className));
 			

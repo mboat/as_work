@@ -36,9 +36,32 @@
 	</fx:Declarations>
 	<s:VGroup x="10" y="10">
 		<s:HGroup >
-			<s:Label text="表格目录：" width="100"/>
-			<s:TextArea y="20" width="300" height="20" id="txt_excel_dir" editable="false"/>
-			<s:Button label="浏览" id="btn_excel_dir" click="btnBrowseDirHandler(event)"/>
+			<s:Label text="数据源格式：" width="100"/>
+			<s:Group id="g_14">
+				<s:RadioButton id="org_14" click="originFormatHandler(event)"/>
+				<s:Label text="excel" width="40" x="20" y="5"/>
+			</s:Group>
+			<s:Group id="g_11">
+				<s:RadioButton id="org_11" click="originFormatHandler(event)"/>
+				<s:Label text="xml" width="40" x="20" y="5"/>
+			</s:Group>
+			<s:Group id="g_12">
+				<s:RadioButton id="org_12" click="originFormatHandler(event)"/>
+				<s:Label text="json" width="40" x="20" y="5"/>
+			</s:Group>
+			<s:Group id="g_10">
+				<s:RadioButton id="org_10" visible="false" click="originFormatHandler(event)"/>
+				<s:Label text="bin" width="40" x="20" y="5" visible="false"/>
+			</s:Group>
+			<s:Group id="g_13">
+				<s:RadioButton id="org_13" visible="false" click="originFormatHandler(event)"/>
+				<s:Label text="code" width="40" x="20" y="5" visible="false"/>
+			</s:Group>
+		</s:HGroup>
+		<s:HGroup >
+			<s:Label text="数据源目录：" width="100"/>
+			<s:TextArea y="20" width="300" height="20" id="txt_origin_dir" editable="false"/>
+			<s:Button label="浏览" id="btn_origin_dir" click="btnBrowseDirHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup height="40">
 			<s:Label text="输出目录：" width="100"/>
@@ -60,25 +83,29 @@
 		<s:Label text="输出格式：" width="100"/>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="前端："  width="100"/>
-			<s:Label text="(高位)bin"/>
 			<s:CheckBox id="box_10" click="clientFormatHandler(event)"/>
-			<s:Label text="	xml"/>
+			<s:Label text="bin" width="40"/>
 			<s:CheckBox id="box_11" click="clientFormatHandler(event)"/>
-			<s:Label text="	json"/>
+			<s:Label text="xml" width="40"/>
 			<s:CheckBox id="box_12" click="clientFormatHandler(event)"/>
-			<s:Label text="	code"/>
+			<s:Label text="json" width="40"/>
 			<s:CheckBox id="box_13" click="clientFormatHandler(event)"/>
+			<s:Label text="code" width="40"/>
+			<s:CheckBox id="box_14" click="clientFormatHandler(event)"/>
+			<s:Label text="excel" width="40"/>
 		</s:HGroup>
 		<s:HGroup height="40" alignmentBaseline="ideographicBottom">
 			<s:Label text="后端：" width="100"/>
-			<s:Label text="(高位)bin"/>
 			<s:CheckBox id="box_20" click="serverFormatsHandler(event)"/>
-			<s:Label text="	xml"/>
+			<s:Label text="bin" width="40"/>
 			<s:CheckBox id="box_21" click="serverFormatsHandler(event)"/>
-			<s:Label text="	json"/>
+			<s:Label text="xml" width="40"/>
 			<s:CheckBox id="box_22" click="serverFormatsHandler(event)"/>
-			<s:Label text="	code" visible="false"/>
+			<s:Label text="json" width="40"/>
+			<s:CheckBox id="box_24" click="serverFormatsHandler(event)"/>
+			<s:Label text="excel" width="40" />
 			<s:CheckBox id="box_23" visible="false" click="serverFormatsHandler(event)"/>
+			<s:Label text="code" width="40" visible="false"/>
 		</s:HGroup>
 		<s:Group >
 			<s:Button x="200" label="开始运行" id="btn_run" click="startHandler(event)" />

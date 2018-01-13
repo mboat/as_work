@@ -7,6 +7,10 @@ package com.type
 		 */		
 		public static const CLASS_PATH:String='class_path';
 		/**
+		 * 数据源选择格式
+		 */		
+		public static const ORIGIN_FORMAT:String="origin_format";
+		/**
 		 *前端输出格式的关键字 
 		 */		
 		public static const CLIENT_FORMATS:String="client_formats";
@@ -21,7 +25,7 @@ package com.type
 		/**
 		 *配置目录 
 		 */		
-		public static const EXCEL_DIR:String ="excel";
+		public static const ORIGIN_DIR:String ="origin";
 		/**
 		 *输出目录 
 		 */		
@@ -46,6 +50,10 @@ package com.type
 		 * 输出code
 		 */
 		public static const CODE:int=3;
+		/**
+		 *输出excel 
+		 */		
+		public static const EXCEL:int=4;
 		/**
 		 *表格前端关键字 
 		 */		
