@@ -3,6 +3,14 @@ package com.type
 	public class CommonConst
 	{
 		/**
+		 *前端代码生成语言类型 
+		 */		
+		public static const CLIENT_CODE_TYPE:String = 'client_code';
+		/**
+		 *后端代码生成语言类型 
+		 */		
+		public static const SERVER_CODE_TYPE:String = 'server_code';
+		/**
 		 *生产代码的类包路径 
 		 */		
 		public static const CLASS_PATH:String='class_path';

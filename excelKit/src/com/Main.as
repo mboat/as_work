@@ -69,12 +69,22 @@ private function showInfo():void{
 	var i:int=0,result:int=0;
 	var cfgValue:int=0;
 	
+	var rBtn:RadioButton=null;
 	//数据源格式
 	cfgValue=_cfgXml.elements(CommonConst.ORIGIN_FORMAT).text();
 	for(i=0;i<len;i++){
 		RadioButton(this["org_1"+i]).selected=(cfgValue==i);
 	}
 	_data.origin_format=cfgValue;
+	
+	//前端生成语言
+	len=2;
+	cfgValue=_cfgXml.elements(CommonConst.CLIENT_CODE_TYPE).text();
+	
+	for(i=0;i<len;i++){
+		CheckBox(this["code_"+i]).selected=(cfgValue==i);
+	}
+	_data.client_code=cfgValue;
 	
 	
 	//前端输出各个格式值
@@ -87,6 +97,10 @@ private function showInfo():void{
 	//code的类路径	
 	_data.class_path=_cfgXml.elements(CommonConst.CLASS_PATH).text();
 	txt_class_path.text=_data.class_path;
+	//前端code的语言类型	
+	_data.client_code=_cfgXml.elements(CommonConst.CLIENT_CODE_TYPE).text();
+	//后端code的语言类型		
+	_data.server_code=_cfgXml.elements(CommonConst.SERVER_CODE_TYPE).text();	
 	
 	updateExportUI();
 }
@@ -270,6 +284,23 @@ private function originFormatHandler(evt:Event):void{
 	_cfgXml[CommonConst.ORIGIN_FORMAT]=_data.origin_format;
 	
 	updateExportUI();
+}
+/**
+ *选择输出code处理函数 
+ */
+private function clientCodeTypeHandler(evt:Event):void{
+	var len:int=2;
+	for(var i:int=0;i<len;i++){
+		var btn:CheckBox=(this["code_"+i] as CheckBox);
+		if(btn==evt.currentTarget){
+			_data.client_code=i;
+			btn.selected=true;
+		}else{
+			btn.selected=false;
+		}
+	}
+	_cfgXml[CommonConst.CLIENT_CODE_TYPE]=_data.client_code;
+	saveCfg();
 }
 
 

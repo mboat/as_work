@@ -1,5 +1,6 @@
 package com.factory
 {
+	import com.amf3.CodeType;
 	import com.as3xls.xls.Sheet;
 	import com.data.GlobalData;
 	import com.event.EventManager;
@@ -37,7 +38,10 @@ package com.factory
 		 *code输出路径记录 
 		 */		
 		private var _codePath:String;
-		
+		/**
+		 *代码类型 
+		 */		
+		public var codeType:int=0;
 		public function BaseWorker(sid:int)
 		{
 			_id=sid;
@@ -136,6 +140,9 @@ package com.factory
 				return "json";
 			}
 			else if(format==CommonConst.CODE){
+				if(codeType==CodeType.TS){
+					return "ts";
+				}
 				return "as";
 			}
 			else if(format==CommonConst.EXCEL){

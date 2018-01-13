@@ -39,7 +39,7 @@ package com.amf3
 		/**
 		 *object类型
 		 */		
-		public static const AMF_object:EAmf3Type=new EAmf3Type(index++,"object",writeObject,readObject,null,"Object");
+		public static const AMF_object:EAmf3Type=new EAmf3Type(index++,"object",writeObject,readObject,null,"Object","any");
 		public static function writeObject(bytes:ByteArray,value:String=null):void{
 			bytes.writeByte(AMF_object.id);
 			bytes.writeUTF(value);
@@ -52,7 +52,7 @@ package com.amf3
 		/**
 		 *任意类型
 		 */		
-		public static var AMF_any:EAmf3Type=new EAmf3Type(index++,"any",writeAny,readAny,null,"*");
+		public static var AMF_any:EAmf3Type=new EAmf3Type(index++,"any",writeAny,readAny,null,"*",'any');
 		public static function writeAny(bytes:ByteArray,value:String=null):void{
 			bytes.writeByte(AMF_any.id);
 			bytes.writeUTF(value);
@@ -65,7 +65,7 @@ package com.amf3
 		/**
 		 *字节
 		 */		
-		public static const AMF_byte:EAmf3Type=new EAmf3Type(index++,"byte",writeByte,readByte,0,"int");
+		public static const AMF_byte:EAmf3Type=new EAmf3Type(index++,"byte",writeByte,readByte,0,"int",'number');
 		public static function writeByte(bytes:ByteArray,value:int):void{
 			bytes.writeByte(AMF_byte.id);
 			bytes.writeByte(value);
@@ -77,7 +77,7 @@ package com.amf3
 		/**
 		 *布尔
 		 */		
-		public static const AMF_boolean:EAmf3Type=new EAmf3Type(index++,"boolean",writeBoolean,readBoolean,false,'Boolean');
+		public static const AMF_boolean:EAmf3Type=new EAmf3Type(index++,"boolean",writeBoolean,readBoolean,false,'Boolean','boolean');
 		public static function writeBoolean(bytes:ByteArray,value:Boolean):void{
 			bytes.writeByte(AMF_boolean.id);
 			bytes.writeBoolean(value);
@@ -89,7 +89,7 @@ package com.amf3
 		/**
 		 *integer整型
 		 */		
-		public static const AMF_integer:EAmf3Type=new EAmf3Type(index++,"integer",writeInteger,readInteger,0,'int');
+		public static const AMF_integer:EAmf3Type=new EAmf3Type(index++,"integer",writeInteger,readInteger,0,'int','number');
 		public static function writeInteger(bytes:ByteArray,value:int):void{
 			bytes.writeByte(AMF_integer.id);
 			bytes.writeInt(value);
@@ -101,7 +101,7 @@ package com.amf3
 		/**
 		 *int整型
 		 */		
-		public static const AMF_int:EAmf3Type=new EAmf3Type(index++,"int",writeInteger,readInteger,0,'int');
+		public static const AMF_int:EAmf3Type=new EAmf3Type(index++,"int",writeInteger,readInteger,0,'int','number');
 		public static function writeInt(bytes:ByteArray,value:int):void{
 			bytes.writeByte(AMF_int.id);
 			bytes.writeInt(value);
@@ -113,7 +113,7 @@ package com.amf3
 		/**
 		 *字符串
 		 */		
-		public static const AMF_string:EAmf3Type=new EAmf3Type(index++,"string",writeUTF,readUTF,null,'String');
+		public static const AMF_string:EAmf3Type=new EAmf3Type(index++,"string",writeUTF,readUTF,null,'String','string');
 		public static function writeUTF(bytes:ByteArray,value:String):void{
 			bytes.writeByte(AMF_string.id);
 			bytes.writeUTF(value);
@@ -125,7 +125,7 @@ package com.amf3
 		/**
 		 * number类型
 		 */		
-		public static const AMF_number:EAmf3Type=new EAmf3Type(index++,"number",writeNumber,readNumber,null,'Number');
+		public static const AMF_number:EAmf3Type=new EAmf3Type(index++,"number",writeNumber,readNumber,null,'Number','number');
 		public static function writeNumber(bytes:ByteArray,value:Number):void{
 			bytes.writeByte(AMF_number.id);
 			bytes.writeDouble(value);
@@ -137,7 +137,7 @@ package com.amf3
 		/**
 		 * double类型
 		 */		
-		public static const AMF_double:EAmf3Type=new EAmf3Type(index++,"double",writeDouble,readDouble,null,'Number');
+		public static const AMF_double:EAmf3Type=new EAmf3Type(index++,"double",writeDouble,readDouble,null,'Number','number');
 		public static function writeDouble(bytes:ByteArray,value:Number):void{
 			bytes.writeByte(AMF_double.id);
 			bytes.writeDouble(value);
@@ -149,7 +149,7 @@ package com.amf3
 		/**
 		 * float类型
 		 */		
-		public static const AMF_float:EAmf3Type=new EAmf3Type(index++,"float",writeFloat,readFloat,null,'Number');
+		public static const AMF_float:EAmf3Type=new EAmf3Type(index++,"float",writeFloat,readFloat,null,'Number','number');
 		public static function writeFloat(bytes:ByteArray,value:Number):void{
 			bytes.writeByte(AMF_float.id);
 			bytes.writeFloat(value);
@@ -161,7 +161,7 @@ package com.amf3
 		/**
 		 * short类型
 		 */		
-		public static const AMF_short:EAmf3Type=new EAmf3Type(index++,"short",writeShort,readShort,null,'int');
+		public static const AMF_short:EAmf3Type=new EAmf3Type(index++,"short",writeShort,readShort,null,'int','number');
 		public static function writeShort(bytes:ByteArray,value:int):void{
 			bytes.writeByte(AMF_short.id);
 			bytes.writeShort(value);

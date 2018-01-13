@@ -40,6 +40,14 @@ package com.data
 		 *生成代码的路径 
 		 */		
 		public var class_path:String;
+		/**
+		 *前端生成代码的语言类型
+		 */		
+		public var client_code:int=0;
+		/**
+		 *后端生成代码的语言类型 
+		 */		
+		public var server_code:int=0;
 		
 		/**
 		 * 输出格式选择数据

@@ -1,6 +1,6 @@
 package com.factory
 {
-	import com.amf3.CodeExportType;
+	import com.amf3.CodeType;
 	import com.amf3.EAmf3Type;
 	import com.as3xls.xls.Sheet;
 	import com.templete.ClassPartASTemplte;

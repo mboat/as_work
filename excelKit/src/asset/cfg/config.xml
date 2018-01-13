@@ -5,6 +5,8 @@
 		<output></output>
 		<code></code>
 	</dir>
+	<client_code>1</client_code>
+	<server_code></server_code>
 	<class_path></class_path>
 	<client_formats></client_formats>
 	<server_formats></server_formats>

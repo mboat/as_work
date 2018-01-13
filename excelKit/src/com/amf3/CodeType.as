@@ -1,6 +1,6 @@
 package com.amf3
 {
-	public class CodeExportType
+	public class CodeType
 	{
 		/**
 		 * 操作类：ActionScript3
