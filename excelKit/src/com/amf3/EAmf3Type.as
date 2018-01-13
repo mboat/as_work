@@ -48,17 +48,19 @@ package com.amf3
 			var str:String=bytes.readUTF();
 			return JSON.parse(str);
 		}
-//		/**
-//		 *任意类型
-//		 */		
-//		public static var AMF_any:EAmf3Type=new EAmf3Type(index++,"any",writeAny,readAny,null,"*");
-//		public static function writeAny(bytes:ByteArray,value:*=null):void{
-//			bytes.writeByte(AMF_any.id);
-//			bytes.writeUTF(value);
-//		}
-//		public static function readAny(bytes:ByteArray):*{
-//			return bytes.readUTF();
-//		}
+		
+		/**
+		 *任意类型
+		 */		
+		public static var AMF_any:EAmf3Type=new EAmf3Type(index++,"any",writeAny,readAny,null,"*");
+		public static function writeAny(bytes:ByteArray,value:String=null):void{
+			bytes.writeByte(AMF_any.id);
+			bytes.writeUTF(value);
+		}
+		public static function readAny(bytes:ByteArray):*{
+			var str:String=bytes.readUTF();
+			return JSON.parse(str);
+		}
 		
 		/**
 		 *字节
@@ -85,7 +87,7 @@ package com.amf3
 		}
 		
 		/**
-		 *整型
+		 *integer整型
 		 */		
 		public static const AMF_integer:EAmf3Type=new EAmf3Type(index++,"integer",writeInteger,readInteger,0,'int');
 		public static function writeInteger(bytes:ByteArray,value:int):void{
@@ -93,6 +95,18 @@ package com.amf3
 			bytes.writeInt(value);
 		}
 		public static function readInteger(bytes:ByteArray):int{
+			return bytes.readInt();
+		}
+		
+		/**
+		 *int整型
+		 */		
+		public static const AMF_int:EAmf3Type=new EAmf3Type(index++,"int",writeInteger,readInteger,0,'int');
+		public static function writeInt(bytes:ByteArray,value:int):void{
+			bytes.writeByte(AMF_int.id);
+			bytes.writeInt(value);
+		}
+		public static function readInt(bytes:ByteArray):int{
 			return bytes.readInt();
 		}
 		
@@ -106,6 +120,54 @@ package com.amf3
 		}
 		public static function readUTF(bytes:ByteArray):String{
 			return bytes.readUTF();
+		}
+		
+		/**
+		 * number类型
+		 */		
+		public static const AMF_number:EAmf3Type=new EAmf3Type(index++,"number",writeNumber,readNumber,null,'Number');
+		public static function writeNumber(bytes:ByteArray,value:Number):void{
+			bytes.writeByte(AMF_number.id);
+			bytes.writeDouble(value);
+		}
+		public static function readNumber(bytes:ByteArray):Number{
+			return bytes.readDouble();
+		}
+		
+		/**
+		 * double类型
+		 */		
+		public static const AMF_double:EAmf3Type=new EAmf3Type(index++,"double",writeDouble,readDouble,null,'Number');
+		public static function writeDouble(bytes:ByteArray,value:Number):void{
+			bytes.writeByte(AMF_double.id);
+			bytes.writeDouble(value);
+		}
+		public static function readDouble(bytes:ByteArray):Number{
+			return bytes.readDouble();
+		}
+		
+		/**
+		 * float类型
+		 */		
+		public static const AMF_float:EAmf3Type=new EAmf3Type(index++,"float",writeFloat,readFloat,null,'Number');
+		public static function writeFloat(bytes:ByteArray,value:Number):void{
+			bytes.writeByte(AMF_float.id);
+			bytes.writeFloat(value);
+		}
+		public static function readFloat(bytes:ByteArray):Number{
+			return bytes.readFloat();
+		}
+		
+		/**
+		 * short类型
+		 */		
+		public static const AMF_short:EAmf3Type=new EAmf3Type(index++,"short",writeShort,readShort,null,'int');
+		public static function writeShort(bytes:ByteArray,value:int):void{
+			bytes.writeByte(AMF_short.id);
+			bytes.writeShort(value);
+		}
+		public static function readShort(bytes:ByteArray):int{
+			return bytes.readShort();
 		}
 		
 	}

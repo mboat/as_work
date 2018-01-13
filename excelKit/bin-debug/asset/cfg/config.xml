@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<dir>
+		<origin></origin>
+		<output></output>
+		<code></code>
+	</dir>
+	<class_path></class_path>
+	<client_formats></client_formats>
+	<server_formats></server_formats>
+	<origin_format>4</origin_format>
+</root>
