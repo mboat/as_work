@@ -50,8 +50,8 @@
 				<s:Label text="json" width="40" x="20" y="5"/>
 			</s:Group>
 			<s:Group id="g_10">
-				<s:RadioButton id="org_10" visible="false" click="originFormatHandler(event)"/>
-				<s:Label text="bin" width="40" x="20" y="5" visible="false"/>
+				<s:RadioButton id="org_10"  click="originFormatHandler(event)"/>
+				<s:Label text="bin" width="40" x="20" y="5"/>
 			</s:Group>
 			<s:Group id="g_13">
 				<s:RadioButton id="org_13" visible="false" click="originFormatHandler(event)"/>

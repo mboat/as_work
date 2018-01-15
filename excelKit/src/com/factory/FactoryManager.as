@@ -6,10 +6,16 @@ package com.factory
 	import com.event.DataEvent;
 	import com.event.EventManager;
 	import com.event.EventType;
+	import com.factory.worker.BaseWorker;
+	import com.factory.worker.BinWorker;
+	import com.factory.worker.CodeWorker;
+	import com.factory.worker.JsonWorker;
+	import com.factory.worker.XmlWorker;
 	import com.type.CommonConst;
 	import com.utils.FileUtil;
 	
 	import flash.filesystem.File;
+	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 	
 	public class FactoryManager
@@ -25,12 +31,7 @@ package com.factory
 		private var clientBool:Boolean;
 		
 		
-		private var clientNames:Array=[];
-		private var clientIndexs:Array=[];
-		private var itemsIndex:Array=[];
-		private var typeIndex:int=-1;
-		private var serverNames:Array=[];
-		private var serverIndexs:Array=[];
+		
 		
 		
 		private var _runningList:Array=[];
@@ -94,122 +95,13 @@ package com.factory
 			clientBool=_data.client_formats>0;
 			
 			var tempDir:File =_data.filesDict[CommonConst.ORIGIN_DIR];
-			var fileList:Array=FileUtil.readFilesByExts(tempDir,_data.getExtsByOrigin(_data.origin_format),null,10);
+			var fileList:Array=[];
+			FileUtil.readFilesByExts(tempDir,fileList,_data.getExtsByOrigin(_data.origin_format),null,10);
 			EventManager.instance().dispatcherWithEvent(EventType.ADD_LIST,fileList);
 			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>读取表格文件完成");
 		}
 		
-		/**
-		 * 解析表格数据源
-		 * @param file
-		 * 
-		 */		
-		public function paserExcel(file:File):void{
-			
-			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>正在处理文件："+file.nativePath);
-			var excelFile:ExcelFile=new ExcelFile();
-			
-			excelFile.loadFromByteArray(FileUtil.getBytesByFile(file));
-			
-			var sheetLen:int=excelFile.sheets.length;
-			for(var i:int=0;i<sheetLen;i++){
-				paserSheet(excelFile.sheets[i]);
-			}
-			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>完成处理文件："+file.nativePath);
-			EventManager.instance().dispatcherWithEvent(EventType.FILE_PASER_COMPLETE);
-		}
-		/**
-		 * 解析工作簿 
-		 * @param sheet
-		 * 
-		 */				
-		public function paserSheet(sheet:Sheet):void{
-			var msg:String=sheet.name+"-"+sheet.getCell(0,0).value;
-			EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>解析："+msg);
-			var exportName:String=sheet.getCell(0,0).value;
-			if(exportName==null||exportName.length==0){
-				return;
-			}
-			
-			var rows:int=sheet.rows;
-			var cols:int=sheet.cols;
-			
-			var info:Object;
-			var content:*;
-			
-			clientNames.length=0;
-			clientIndexs.length=0;
-			serverNames.length=0;
-			serverIndexs.length=0;
-			typeIndex=2;
-			itemsIndex.length=0;
-			
-			var headEndIndex:int=4;
-			for(var i:int=1;i<headEndIndex;i++){
-				content=sheet.getCell(i,0).value;
-				if(clientBool&&content==CommonConst.EXCEL_CLIENT){
-					info=readRowToCols(sheet,i,cols);
-					clientNames=info.contents;
-					clientIndexs=info.indexs;
-				}
-				
-				if(content==CommonConst.EXCEL_TYPE){
-					typeIndex=i;
-				}
-				
-				if(serverBool&&content==CommonConst.EXCEL_SERVER){
-					info=readRowToCols(sheet,i,cols);
-					serverNames=info.contents;
-					serverIndexs=info.indexs;
-				}
-			}
-			
-			for(i=headEndIndex;i<rows;i++){
-				content=sheet.getCell(i,0).value;
-				if(content!=CommonConst.EXCEL_NO){
-					itemsIndex.push(i);
-				}
-				if(content!=CommonConst.EXCEL_END){
-					break;
-				}
-			}
-			
-			if(clientBool){
-				exportSheet(CommonConst.EXPORT_CLIENT,_data.client_formats,sheet,clientNames,clientIndexs,typeIndex,itemsIndex);
-			}
-			if(serverBool){
-				exportSheet(CommonConst.EXPORT_SERVER,_data.server_formats,sheet,serverNames,serverIndexs,typeIndex,itemsIndex);
-			}
-			
-		}
-		
-		private function readRowToCols(sheet:Sheet,index:int,cols:int):Object{
-			var contents:Array=[];
-			var indexs:Array=[];
-			for(var k:int=1;k<cols;k++){
-				var content:String=sheet.getCell(index,k).value;
-				if(content&&content.length>0){
-					contents.push(content);
-					indexs.push(k);
-				}
-			}
-			return {"contents":contents,"indexs":indexs};
-		}
-		
-		private function exportSheet(port:int,formats:int,sheet:Sheet,names:Array=null,colIndexs:Array=null,typesIndex:int=-1,rowsIndex:Array=null):void{
-			
-			var len:int=_data.formatLen;
-			var i:int=0,result:int;
-			for(i=0;i<len;i++){
-				result=formats>>(len-i-1)&1;
-				if(result==1){
-					exportProduct(port,i,sheet,names,colIndexs,typesIndex,rowsIndex);
-				}
-			}
-		}
-		
-		
-		private function exportProduct(port:int,format:int,sheet:Sheet,names:Array=null,colIndexs:Array=null,typesIndex:int=-1,rowsIndex:Array=null):void{
+		public function getFormatWorker(format:int):BaseWorker{
 			var list:Array=poolDict[format];
 			if(list==null){
 				list=poolDict[format]=[];
@@ -221,17 +113,8 @@ package com.factory
 			}else{
 				startProduct=createProduct(format);
 			}
-			
-			if(startProduct){
-				_runningList.push(startProduct.getId());
-				startProduct.reset();
-				startProduct.excelExec(port,sheet,names,typesIndex,colIndexs,rowsIndex);
-			}else{
-				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>无法解析类型："+format);
-			}
-			
+			return startProduct;
 		}
-		
 		
 		private function createProduct(type:int):BaseWorker{
 			switch(type){
@@ -245,6 +128,62 @@ package com.factory
 					return new CodeWorker(sn++);
 			}
 			return null;
+		}
+		
+		
+		public function paserFile(file:File):void{
+			
+			var dataFactory:BaseFactory=null;
+			if(_data.origin_format==CommonConst.EXCEL){
+				dataFactory=ExcelFactory.instance();
+			}
+			else if(_data.origin_format==CommonConst.BIN){
+				dataFactory=BinFactory.instance();
+			}
+			
+			if(dataFactory){
+				dataFactory.parseFile(file);
+			}
+			else{
+				EventManager.instance().dispatcherWithEvent(">>>>>>暂时开放该类数据源解析，格式类型："+_data.origin_format+"\n");
+			}
+		}
+		
+		public function exportFormatByExcel(port:int,format:int,sheet:Sheet,names:Array=null,colIndexs:Array=null,typesIndex:int=-1,rowsIndex:Array=null):void{
+			
+			var startProduct:BaseWorker=getFormatWorker(format);
+			if(startProduct){
+				_runningList.push(startProduct.getId());
+				startProduct.reset();
+				startProduct.parseExcel(port,sheet,names,typesIndex,colIndexs,rowsIndex);
+			}else{
+				EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>无法解析类型："+format);
+			}
+		}
+		
+		public function exportFormat(port:int,fileName:String,headNames:Array,indexs:Array,types:Array,models:Array,descrs:Array):void{
+			var len:int=_data.formatLen;
+			var i:int=0,result:int;
+			var formats:int=0;
+			if(port==CommonConst.EXPORT_CLIENT){
+				formats=_data.client_formats;
+			}else{
+				formats=_data.server_formats;
+			}
+			for(i=0;i<len;i++){
+				result=formats>>(len-i-1)&1;
+				if(result==1){
+					var startProduct:BaseWorker=getFormatWorker(i);
+					if(startProduct){
+						_runningList.push(startProduct.getId());
+						startProduct.reset();
+						startProduct.parse(port,fileName,headNames,indexs,types,models,descrs);
+					}else{
+						EventManager.instance().dispatcherWithEvent(EventType.GET_LOG_MSG,">>>>>>无法解析类型："+i);
+					}
+				}
+			}
+			
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.factory
+package com.factory.worker
 {
 	import com.amf3.CodeType;
 	import com.as3xls.xls.Sheet;
@@ -64,7 +64,7 @@ package com.factory
 		}
 
 		/**
-		 * 执行解析 
+		 * 执行表格解析 
 		 * @param port 输出方
 		 * @param sheet 工作簿数据
 		 * @param names 头部字段数组
@@ -73,14 +73,27 @@ package com.factory
 		 * @param rowIds     条目item的index组
 		 * 
 		 */			
-		public function excelExec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
+		public function parseExcel(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
 			status=0;
 			_port=port;
 		}
 		
-		public function xmlExec():void{
-			
+		/**
+		 * 解析
+		 * @param port 输出端
+		 * @param fileName 输出文件名
+		 * @param headNames 标题关键字组
+		 * @param indexs    关键字所在索引组
+		 * @param types		关键字的类型数组
+		 * @param models    数据二维组
+		 * @param descrs    关键字的描述组
+		 * 
+		 */		
+		public function parse(port:int,fileName:String,headNames:Array,indexs:Array,types:Array,models:Array,descrs:Array):void{
+			status=0;
+			_port=port;
 		}
+		
 		/**
 		 * 保存二进制文件 
 		 * @param fileName

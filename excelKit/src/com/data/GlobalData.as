@@ -67,10 +67,12 @@ package com.data
 			orgToFormatDict[CommonConst.EXCEL]=[CommonConst.BIN,CommonConst.XML,CommonConst.JSON,CommonConst.CODE];
 			orgToFormatDict[CommonConst.XML]=[CommonConst.BIN,CommonConst.JSON];
 			orgToFormatDict[CommonConst.JSON]=[CommonConst.BIN,CommonConst.XML];
+			orgToFormatDict[CommonConst.BIN]=[CommonConst.XML,CommonConst.JSON];
 			
 			_extsDict[CommonConst.EXCEL]=['xls','xlsx'];
 			_extsDict[CommonConst.XML]=['xml'];
 			_extsDict[CommonConst.JSON]=['json'];
+			_extsDict[CommonConst.BIN]=['bin'];
 		}
 		/**
 		 * 根据数据源类型获取后缀 

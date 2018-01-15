@@ -117,7 +117,7 @@ package com.data.core
 		 *          <tt>null</tt> if the map contains no mapping for this key
 		 *           or it is null value originally.
 		 */
-		public function get(key:*):*{
+		public function take(key:*):*{
 			var value:* = content[key];
 			if(value !== undefined){
 				return value;
@@ -134,7 +134,7 @@ package com.data.core
 		 *           or it is null value originally.
 		 */
 		public function getValue(key:*):*{
-			return get(key);
+			return take(key);
 		}
 		
 		/**
@@ -159,7 +159,7 @@ package com.data.core
 				if(!exist){
 					length++;
 				}
-				var oldValue:* = this.get(key);
+				var oldValue:* = this.take(key);
 				content[key]=value;
 				return oldValue;
 			}

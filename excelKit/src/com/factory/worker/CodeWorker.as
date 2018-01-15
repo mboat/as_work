@@ -1,4 +1,4 @@
-package com.factory
+package com.factory.worker
 {
 	import com.amf3.CodeType;
 	import com.amf3.EAmf3Type;
@@ -19,8 +19,8 @@ package com.factory
 			super(sid);
 			format=CommonConst.CODE;
 		}
-		override public function excelExec(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
-			super.excelExec(port,sheet,names,typeIndex,colIndexs,rowIds);
+		override public function parseExcel(port:int,sheet:Sheet,names:Array,typeIndex:int,colIndexs:Array,rowIds:Array):void{
+			super.parseExcel(port,sheet,names,typeIndex,colIndexs,rowIds);
 			
 			var gdata:GlobalData=GlobalData.instance();
 			var codewriter:CodeTemplete;
@@ -46,7 +46,9 @@ package com.factory
 			var classPath:String = gdata.class_path;
 			addCodes(codewriter.writePackage(classPath));
 			
-			var className:String=sheet.name+"CfgVo";
+			var exportName:String=sheet.getCell(0,0).value;
+			
+			var className:String=exportName+"CfgVo";
 			//class的注释
 			preList.push(codewriter.writeMultiNote('配置生成类：'+className,{'author':"工具",'time':new Date()},true));
 			

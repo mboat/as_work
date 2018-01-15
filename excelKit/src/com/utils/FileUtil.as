@@ -1,7 +1,5 @@
 package com.utils
 {
-	import com.data.core.HashMap;
-	
 	import flash.events.Event;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -253,42 +251,41 @@ package com.utils
 		 * @param loop 读取深度
 		 * @return 文件数组
 		 */		
-		public static function readFilesByExts(file:File,exts:Array,exclueList:Array=null,loop:Number=int.MAX_VALUE):Array{
-			var tempList:Array=[];
-			if(file==null)return tempList;
-			var files:Array = file.getDirectoryListing();
-			for(var i:uint = 0; i < files.length; i++)
-			{
-				var temp:File=files[i] as File;
-				var path:String=temp.nativePath;
-				if(exclueList&&exclueList.length>0){
-					var exclueBool:Boolean=false;
-					var itemStr:String;
-					for(var k:int=0;k<exclueList.length;k++ ){
-						itemStr=exclueList[k];
-						if(itemStr&&itemStr.length>0&&path.indexOf(itemStr)>=0){
-							exclueBool=true;
-							break;
+		public static function readFilesByExts(file:File,saveList:Array,exts:Array,exclueList:Array=null,loop:Number=int.MAX_VALUE):void{
+			if(file){
+				var files:Array = file.getDirectoryListing();
+				for(var i:uint = 0; i < files.length; i++)
+				{
+					var temp:File=files[i] as File;
+					var path:String=temp.nativePath;
+					if(exclueList&&exclueList.length>0){
+						var exclueBool:Boolean=false;
+						var itemStr:String;
+						for(var k:int=0;k<exclueList.length;k++ ){
+							itemStr=exclueList[k];
+							if(itemStr&&itemStr.length>0&&path.indexOf(itemStr)>=0){
+								exclueBool=true;
+								break;
+							}
+						}
+						if(exclueBool){
+							continue;
 						}
 					}
-					if(exclueBool){
-						continue;
+					
+					if(temp.isDirectory&&temp.getDirectoryListing().length>0&&loop>0){
+						var tempLoop:Number=loop-1;
+						//					tempList.push(temp);
+						readFilesByExts(temp,saveList,exts,exclueList,tempLoop);
+					}else{
+						var bool:Boolean=true;
+						if(exts!=null&&exts.length>0){
+							bool=exts.indexOf(temp.extension)>=0;
+						}
+						if(bool)saveList.push(temp);
 					}
-				}
-				
-				if(temp.isDirectory&&temp.getDirectoryListing().length>0&&loop>0){
-					var tempLoop:Number=loop-1;
-					tempList.push(temp);
-					readFilesByExts(temp,exts,exclueList,tempLoop);
-				}else{
-					var bool:Boolean=true;
-					if(exts!=null&&exts.length>0){
-						bool=exts.indexOf(temp.extension)>=0;
-					}
-					if(bool)tempList.push(temp);
 				}
 			}
-			return tempList;
 		}
 		
 	}

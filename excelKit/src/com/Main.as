@@ -361,12 +361,8 @@ private function onEnterFrame(evt:Event):void{
 	if(_running==false&&options.length>0){
 		_running=true;
 		txt_log.appendText(">>>>>>已启动\n");
-		if(_data.origin_format==CommonConst.EXCEL){
-			FactoryManager.instance().paserExcel(options.shift());
-		}
-		else{
-			txt_log.appendText(">>>>>>暂时开放该类数据源解析，格式类型："+_data.origin_format+"\n");
-		}
+		
+		FactoryManager.instance().paserFile(options.shift());
 	}
 	
 	if(options.length<=0){

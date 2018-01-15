@@ -6,20 +6,37 @@ package com.amf3
 
 	public class EAmf3Type
 	{
-		private static var index:int=0;
+		private static var index:int=1;
 		private static var dict:HashMap=new HashMap();
 		
-		
+		/**
+		 *注册id 
+		 */		
 		public var id:uint;
-		public var key:String;
+		/**
+		 *注册关键字类型 
+		 */		
+		public var type:String;
+		/**
+		 *写入函数 
+		 */		
 		public var writeFunction:Function;
+		/**
+		 *读取函数 
+		 */		
 		public var readFunction:Function;
+		/**
+		 *初始值 
+		 */		
 		public var initData:*;
+		/**
+		 *各个语言的类型数组 
+		 */		
 		public var codes:Array=[];
 		public function EAmf3Type(sn:uint,word:String,writefun:Function,readfun:Function,value:*,...params)
 		{
 			id=sn;
-			key=word;
+			type=word;
 			writeFunction=writefun;
 			readFunction=readfun;
 			initData=value;
@@ -27,13 +44,22 @@ package com.amf3
 			dict.put(id,this);
 		}
 		/**
-		 * 类型字符串 
+		 * 根据关键字类型获取EAmf3Type
 		 * @param key
 		 * @return 
 		 * 
 		 */		
 		public static function getEAmf3TypeByKey(key:String):EAmf3Type{
 			return EAmf3Type["AMF_"+key.toLocaleLowerCase()];
+		}
+		/**
+		 * 根据id获取EAmf3Type 
+		 * @param id
+		 * @return 
+		 * 
+		 */		
+		public static function getEAmf3TypeById(id:int):EAmf3Type{
+			return dict.take(id);
 		}
 		
 		/**
@@ -46,6 +72,9 @@ package com.amf3
 		}
 		public static function readObject(bytes:ByteArray):Object{
 			var str:String=bytes.readUTF();
+			if(str==""||str==null){
+				return null;
+			}
 			return JSON.parse(str);
 		}
 		
@@ -59,6 +88,9 @@ package com.amf3
 		}
 		public static function readAny(bytes:ByteArray):*{
 			var str:String=bytes.readUTF();
+			if(str==""||str==null){
+				return null;
+			}
 			return JSON.parse(str);
 		}
 		
