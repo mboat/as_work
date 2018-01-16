@@ -1,13 +1,13 @@
 <root>
   <dir>
-    <origin>C:\Users\Administrator\Desktop\output</origin>
-    <output>C:\Users\Administrator\Desktop\output2</output>
-    <code/>
+    <origin>C:\Users\Administrator\Desktop\sheet</origin>
+    <output>C:\Users\Administrator\Desktop\output</output>
+    <code>C:\Users\Administrator\Desktop\code</code>
   </dir>
   <client_code>0</client_code>
   <server_code/>
   <class_path/>
-  <client_formats>12</client_formats>
-  <server_formats>12</server_formats>
-  <origin_format>0</origin_format>
+  <client_formats>30</client_formats>
+  <server_formats>0</server_formats>
+  <origin_format>4</origin_format>
 </root>
